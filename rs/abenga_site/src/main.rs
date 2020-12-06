@@ -4,7 +4,6 @@
 
 pub mod views;
 
-
 fn main() {
     views::rocket().launch();
 }
