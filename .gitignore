@@ -1,4 +1,5 @@
 rs/abenga_site/config.toml
 rs/abenga_site/target
 rs/abenga_site/Cargo.lock
+static_pipeline/vendor/bootstrap
 .idea
