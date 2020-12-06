@@ -1,4 +1,4 @@
-STATIC_PATH=../static/
+STATIC_PATH=../rs/abenga_site/static/
 
 all:	css fonts js
 
