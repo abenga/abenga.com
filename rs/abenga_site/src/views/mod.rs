@@ -33,7 +33,7 @@ pub fn index() -> Template {
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", routes![index])
-        .mount("/static", StaticFiles::from("/static"))
+        .mount("/static", StaticFiles::from("static"))
         .register(catchers![not_found])
         .attach(Template::fairing())
 }
