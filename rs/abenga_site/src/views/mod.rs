@@ -2,7 +2,7 @@
 // #[macro_use] extern crate rocket;
 
 use rocket_contrib::templates::Template;
-
+use rocket_contrib::serve::StaticFiles;
 
 #[derive(serde::Serialize)]
 struct TemplateContext {
@@ -33,6 +33,7 @@ pub fn index() -> Template {
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", routes![index])
+        .mount("/static", StaticFiles::from("/static"))
         .register(catchers![not_found])
         .attach(Template::fairing())
 }

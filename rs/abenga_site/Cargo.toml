@@ -16,5 +16,5 @@ toml = "0.5.7"
 
 [dependencies.rocket_contrib]
 version = "0.4"
-default-features = false
-features = ["handlebars_templates"]
+default-features = true
+features = ["json", "serve", "handlebars_templates", "uuid"]

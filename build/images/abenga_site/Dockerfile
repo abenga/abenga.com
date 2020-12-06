@@ -2,19 +2,20 @@
 FROM rustlang/rust:nightly as builder
 
 ADD rs/abenga_site ./abenga_site
+ADD static ./static
 WORKDIR ./abenga_site
 
 RUN cargo build
 
 # Create Slim Distribution Image
 FROM debian:buster-slim
-ARG APP=/usr/src/app
+ARG APP=/app
 
 RUN apt-get update \
     && apt-get install -y ca-certificates tzdata \
     && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8080
+EXPOSE 8000
 
 ENV TZ=Etc/UTC \
     APP_USER=appuser
@@ -24,6 +25,8 @@ RUN groupadd $APP_USER \
     && mkdir -p ${APP}
 
 COPY --from=builder /abenga_site/target/debug/abenga_site ${APP}/abenga_site
+COPY --from=builder /static ${APP}/static
+COPY --from=builder /abenga_site/templates ${APP}/templates
 
 RUN chown -R $APP_USER:$APP_USER ${APP}
 
