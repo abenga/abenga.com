@@ -4,6 +4,8 @@
 use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
 
+use crate::lib::db::utils::posts as posts_utils;
+
 #[derive(serde::Serialize)]
 struct IndexTemplateContext {
     title: &'static str,

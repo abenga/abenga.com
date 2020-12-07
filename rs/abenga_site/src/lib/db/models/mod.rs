@@ -1,9 +1,9 @@
 
 use chrono::{DateTime, Utc};
-use std::collections::HashMap;
+// use std::collections::HashMap;
 
 
-#[derive(serde::Serialize)]
+// #[derive(serde::Serialize)]
 pub struct Person {
     id: i64,
     first_name: &'static str,
@@ -13,7 +13,7 @@ pub struct Person {
 }
 
 
-#[derive(serde::Serialize)]
+// #[derive(serde::Serialize)]
 pub struct Author {
     id: i64,
     bio_md: &'static str,
@@ -21,7 +21,7 @@ pub struct Author {
 }
 
 
-#[derive(serde::Serialize)]
+// #[derive(serde::Serialize)]
 pub struct LoginSession {
     id: i64,
     person_id: i64,
@@ -32,7 +32,7 @@ pub struct LoginSession {
 }
 
 
-#[derive(serde::Serialize)]
+// #[derive(serde::Serialize)]
 pub struct Post {
     id: i64,
     title: &'static str,
@@ -48,7 +48,7 @@ pub struct Post {
 }
 
 
-#[derive(serde::Serialize)]
+// #[derive(serde::Serialize)]
 pub struct PostSeries {
     id: i64,
     author_id: i64,
@@ -61,5 +61,5 @@ pub struct PostSeries {
     tags: Vec<i64>,
     cover_image_path: &'static str,
     // n_posts: u8,
-    // posts: HashMap<i64, &Post>,
+    // posts: HashMap<i64, Post>,
 }

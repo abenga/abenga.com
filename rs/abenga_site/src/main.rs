@@ -2,7 +2,9 @@
 
 #[macro_use] extern crate rocket;
 
+
 pub mod views;
+pub mod lib;
 
 fn main() {
     views::rocket().launch();
