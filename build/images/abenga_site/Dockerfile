@@ -2,7 +2,6 @@
 FROM rustlang/rust:nightly as builder
 
 ADD rs/abenga_site ./abenga_site
-ADD static ./static
 WORKDIR ./abenga_site
 
 RUN cargo build
@@ -25,7 +24,7 @@ RUN groupadd $APP_USER \
     && mkdir -p ${APP}
 
 COPY --from=builder /abenga_site/target/debug/abenga_site ${APP}/abenga_site
-COPY --from=builder /static ${APP}/static
+COPY --from=builder /abenga_site/static ${APP}/static
 COPY --from=builder /abenga_site/templates ${APP}/templates
 
 RUN chown -R $APP_USER:$APP_USER ${APP}
