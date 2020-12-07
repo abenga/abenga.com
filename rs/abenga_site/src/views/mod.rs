@@ -5,7 +5,7 @@ use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
 
 #[derive(serde::Serialize)]
-struct TemplateContext {
+struct IndexTemplateContext {
     title: &'static str,
     name: &'static str,
     items: Vec<&'static str>,
@@ -21,7 +21,7 @@ fn not_found() -> String {
 
 #[get("/")]
 pub fn index() -> Template {
-    Template::render("pages/index", &TemplateContext {
+    Template::render("pages/index", &IndexTemplateContext {
         title: "Home Page",
         name: "Horace",
         items: vec!["One", "Two", "Three"],
