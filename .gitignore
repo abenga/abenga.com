@@ -1,5 +1,12 @@
+# Python files
+*.pyc
+
+# Rust
 rs/abenga_site/config.toml
 rs/abenga_site/target
 rs/abenga_site/Cargo.lock
+
+# Static build pipeline
 static_pipeline/vendor/bootstrap
+
 .idea

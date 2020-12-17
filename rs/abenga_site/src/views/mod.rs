@@ -23,6 +23,9 @@ fn not_found() -> String {
 
 #[get("/")]
 pub fn index() -> Template {
+
+
+
     Template::render("pages/index", &IndexTemplateContext {
         title: "Home Page",
         name: "Horace",
