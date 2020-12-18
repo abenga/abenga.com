@@ -228,6 +228,6 @@ def get_database_connection(db_config_section):
     database = config['databases'][db_config_section]['database']
     user = config['databases'][db_config_section]['user']
     password = config['databases'][db_config_section]['password']
-    echo = config['databases'][db_config_section]['echo'] == 'TRUE'
+    echo = config['databases'][db_config_section]['echo']
 
     return DBConnMaker(protocol, host, user, password, database, echo)
