@@ -1,5 +1,6 @@
 # Python files
 *.pyc
+py/env
 
 # Rust
 rs/abenga_site/config.toml
