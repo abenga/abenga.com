@@ -11,3 +11,4 @@ rs/abenga_site/Cargo.lock
 static_pipeline/vendor/bootstrap
 
 .idea
+configuration.toml

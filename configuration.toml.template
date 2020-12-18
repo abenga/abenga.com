@@ -1,0 +1,19 @@
+[databases]
+
+[databases.local]
+protocol = "postgresql"
+server = "localhost"
+port = 5432
+database = "database"
+user = "user"
+password = "******"
+echo = true
+
+[databases.remote]
+protocol = "postgresql"
+server = "remote_host"
+port = 5432
+database = "user"
+user = "user"
+password = "*****"
+echo = false
