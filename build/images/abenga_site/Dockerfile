@@ -2,6 +2,7 @@
 FROM rustlang/rust:nightly as builder
 
 ADD rs/abenga_site ./abenga_site
+ADD configuration.toml ./configuration.toml
 WORKDIR ./abenga_site
 
 RUN cargo build
@@ -24,6 +25,7 @@ RUN groupadd $APP_USER \
     && mkdir -p ${APP}
 
 COPY --from=builder /abenga_site/target/debug/abenga_site ${APP}/abenga_site
+COPY --from=builder /configuration.toml ${APP}/configuration.toml
 COPY --from=builder /abenga_site/static ${APP}/static
 COPY --from=builder /abenga_site/templates ${APP}/templates
 

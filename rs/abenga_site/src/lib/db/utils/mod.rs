@@ -1,10 +1,13 @@
 pub mod posts;
 
+use crate::lib::config;
+
 // use postgres;
 
 
 pub fn get_connection() -> Result<postgres::Client, postgres::Error> {
-    let connect_str = "postgresql://postgres:postgres@localhost/library";
-    let mut client = postgres::Client::connect(connect_str, postgres::NoTls)?;
+    let conf = config::get_config();
+    let connect_str = format!("postgresql://postgres:{user}@host:port/db_name", user=conf.databases["local"].user);
+    let mut client = postgres::Client::connect(&connect_str, postgres::NoTls)?;
     Ok(client)
 }

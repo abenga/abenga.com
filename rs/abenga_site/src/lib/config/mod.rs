@@ -1,26 +1,40 @@
 
 use std::collections::HashMap;
 use std::fs;
+use std::io;
+use std::io::Read;
+use std::path;
+// use std::io::Read;
 
 
 #[derive(serde::Deserialize)]
-struct Config {
-    databases: HashMap<String, DBConfig>,
+pub struct Config {
+    pub databases: HashMap<String, DBConfig>,
 }
 
 #[derive(serde::Deserialize)]
-struct DBConfig {
-    protocol: String,
-    host: String,
-    port: u32,
-    database: String,
-    user: String,
-    password: String,
-    echo: bool,
+pub struct DBConfig {
+    pub protocol: String,
+    pub host: String,
+    pub port: u32,
+    pub database: String,
+    pub user: String,
+    pub password: String,
+    pub echo: bool,
 }
 
-pub fn get_config() -> Result<Config, Box<std::error::Error + 'static>> {
-    let config_file_path = "/home/horace/Documents/Development/Rust/abenga_site/configuration.toml";
-    let config_str = fs::read_to_string(config_file_path)?.parse()?;
-    toml::from_str(config_str).unwrap()
+
+pub fn get_config() -> Config {
+    // FIXME: Make this path relative, or a useful system-wide value
+    // let config_file_path = path::Path::new("/app/configuration.toml");
+    let config_file_path = path::Path::new("/home/horace/Documents/Development/Rust/abenga_site/configuration.toml");
+    let display = config_file_path.display();
+
+    let mut f = fs::File::open(&config_file_path).expect("Unable to open configuration file");
+
+    let mut s = String::new();
+    f.read_to_string(&mut s).expect("Could not read file to string");
+
+    let config: Config = toml::from_str(&s).expect("Unable to parse config");
+    return config;
 }
