@@ -6,11 +6,6 @@ use std::path;
 
 
 #[derive(serde::Deserialize)]
-pub struct Config {
-    pub databases: HashMap<String, DBConfig>,
-}
-
-#[derive(serde::Deserialize)]
 pub struct DBConfig {
     pub protocol: String,
     pub host: String,
@@ -19,6 +14,12 @@ pub struct DBConfig {
     pub user: String,
     pub password: String,
     pub echo: bool,
+}
+
+
+#[derive(serde::Deserialize)]
+pub struct Config {
+    pub databases: HashMap<String, DBConfig>,
 }
 
 

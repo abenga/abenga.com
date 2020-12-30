@@ -1,13 +1,20 @@
 pub mod posts;
 
+use std::env;
+
 use crate::lib::config;
 
-// use postgres;
 
-
-pub fn get_connection() -> Result<postgres::Client, postgres::Error> {
+pub fn get_db_connection() -> Result<postgres::Connection, postgres::Error> {
     let conf = config::get_config();
-    let connect_str = format!("postgresql://postgres:{user}@host:port/db_name", user=conf.databases["local"].user);
-    let client = postgres::Client::connect(&connect_str, postgres::NoTls)?;
-    Ok(client)
+    let db_env = env::var("DATABASE_ENV_NAME").expect("Database environment name not set!");
+    let connect_str = format!("postgresql://{user}:{password}@{host}:{port}/{database}",
+                              user=conf.databases[&db_env].user,
+                              password=conf.databases[&db_env].password,
+                              host=conf.databases[&db_env].host,
+                              port=conf.databases[&db_env].port,
+                              database=conf.databases[&db_env].database);
+    let conn = postgres::Connection::connect(connect_str,
+                                             postgres::TlsMode::None).unwrap();
+    Ok(conn)
 }

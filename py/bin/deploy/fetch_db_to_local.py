@@ -15,7 +15,7 @@ from abenga_site.py.lib.utils import database as db_utils
 def add_uids_to_remote():
     # NOTE: This was a one-time operation to add UUID columns in posts and post series
     with db_utils.get_database_connection('dummy') as remote_conn:
-        query = "ALTER TABLE data.post_series ADD COLUMN IF NOT EXISTS uid UUID DEFAULT NULL UNIQUE;"
+        query = "ALTER TABLE data.post_series ADD COLUMN IF NOT EXISTS uid VARCHAR DEFAULT NULL UNIQUE;"
         remote_conn.execute(query)
         remote_conn.session.commit()
 
@@ -27,7 +27,7 @@ def add_uids_to_remote():
             remote_conn.execute(update_query)
             remote_conn.session.commit()
 
-        query = "ALTER TABLE data.posts ADD COLUMN IF NOT EXISTS uid UUID DEFAULT NULL UNIQUE;"
+        query = "ALTER TABLE data.posts ADD COLUMN IF NOT EXISTS uid VARCHAR DEFAULT NULL UNIQUE;"
         remote_conn.execute(query)
         remote_conn.session.commit()
 
@@ -160,7 +160,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--create_local", action="store_true", help="Create local db")
     parser.add_argument("--delete", action="store_true", help="Delete and recreate DB")
+    parser.add_argument("--create_local", action="store_true", help="Create local db")
     args = parser.parse_args()
     main(args)

@@ -23,7 +23,8 @@ fn not_found() -> String {
 
 #[get("/")]
 pub fn index() -> Template {
-    posts_utils::posts();
+    let _post_series = posts_utils::post_series();
+    let _posts = posts_utils::posts();
     Template::render("pages/index", &IndexTemplateContext {
         title: "Home Page",
         name: "Horace",

@@ -43,7 +43,7 @@ class PostSeries(Base):
     __table_args__ = {'schema': 'data'}
 
     id = Column(Integer, primary_key=True, name='id', quote=False)
-    uid = Column(UUID, unique=True, nullable=False, name='uid', quote=False)
+    uid = Column(String, unique=True, nullable=False, name='uid', quote=False)
     author_id = Column(Integer, ForeignKey('data.authors.id'), name='author_id', quote=False)
     title = Column(String, nullable=False, name='title', quote=False)
     joined_title = Column(String, unique=True, nullable=False, name='joined_title', quote=False)
@@ -60,7 +60,7 @@ class Post(Base):
     __table_args__ = {'schema': 'data'}
 
     id = Column(Integer, primary_key=True, name='id', quote=False)
-    uid = Column(UUID, unique=True, nullable=False, name='uid', quote=False)
+    uid = Column(String, unique=True, nullable=False, name='uid', quote=False)
     title = Column(String, nullable=False, name='title', quote=False)
     joined_title = Column(String, unique=True, nullable=False, name='joined_title', quote=False)
     date_added = Column(DateTime, nullable=False, name='date_added', quote=False)
