@@ -12,7 +12,7 @@ from abenga_site.py.lib.models import data as data_models
 from abenga_site.py.lib.utils import database as db_utils
 
 
-def add_uids_to_remote():
+def add_uuids_to_remote():
     # NOTE: This was a one-time operation to add UUID columns in posts and post series
     with db_utils.get_database_connection('dummy') as remote_conn:
         query = "ALTER TABLE data.post_series ADD COLUMN IF NOT EXISTS uid VARCHAR DEFAULT NULL UNIQUE;"
