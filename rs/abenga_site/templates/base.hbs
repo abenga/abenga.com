@@ -13,13 +13,15 @@
   <link href="/static/css/abenga_site.min.css" rel="stylesheet" />
 <!--  <link rel="shortcut icon" href="/static/img/favicon.ico" />-->
 </head>
-<body>
-<div class="container-fluid">
+
+<body class="d-flex flex-column h-100">
+<main role="main" class="flex-shrink-0">
   {{> nav}}
   {{~> page}}
-</div>
+</main>
 {{> footer}}
 </body>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!--<script>-->
 <!--   window.jQuery || document.write('<script src="/static/js/lib/vendor/jquery.min.js"><\/script>');-->
