@@ -1,6 +1,7 @@
 
 use std::collections::HashMap;
 use std::fs;
+use std::env;
 use std::io::Read;
 use std::path;
 
@@ -24,9 +25,13 @@ pub struct Config {
 
 
 pub fn get_config() -> Config {
-    // FIXME: Make this path relative, or a useful system-wide value
-    let config_file_path = path::Path::new("/home/horace/Documents/Development/Rust/abenga_site/configuration.toml");
-    //let config_file_path = path::Path::new("/app/configuration.toml");
+    let app_run_type = env::var("SITE_RUN_TYPE").expect("Site run type not set!");
+    let config_file_path = if app_run_type == "DOCKER" {
+        path::Path::new("/app/configuration.toml")
+    } else {
+        path::Path::new("/home/horace/Documents/Development/Rust/abenga_site/configuration.toml")
+    };
+
     let mut f = fs::File::open(&config_file_path).expect("Unable to open configuration file");
     let mut s = String::new();
     f.read_to_string(&mut s).expect("Could not read file to string");
