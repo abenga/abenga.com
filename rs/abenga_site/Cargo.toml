@@ -1,6 +1,6 @@
 [package]
 name = "abenga_site"
-version = "0.0.0"
+version = "0.0.0-alpha"
 authors = ["Horace <horace@abenga.com>"]
 edition = "2018"
 
