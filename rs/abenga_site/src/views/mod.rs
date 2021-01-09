@@ -21,6 +21,7 @@ fn not_found() -> String {
     format!("Not Found!")
 }
 
+
 #[get("/")]
 pub fn index() -> Template {
     let _post_series = posts_utils::post_series();
@@ -33,7 +34,7 @@ pub fn index() -> Template {
     })
 }
 
-// #[launch]
+
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", routes![index])
