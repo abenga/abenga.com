@@ -5,14 +5,25 @@ use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
 
 use crate::lib::db::utils::posts as posts_utils;
+use crate::lib::db::models;
 
 #[derive(serde::Serialize)]
 struct IndexTemplateContext {
     title: &'static str,
     name: &'static str,
-    items: Vec<&'static str>,
+    //items: Vec<&'static str>,
     // This key tells handlebars which template is the parent.
     parent: &'static str,
+}
+
+
+#[derive(serde::Serialize)]
+struct PostsTemplateContext<'a> {
+    title: &'a str,
+    name: &'a str,
+    posts: Vec<models::Post>,
+    // This key tells handlebars which template is the parent.
+    parent: &'a str,
 }
 
 
@@ -24,12 +35,22 @@ fn not_found() -> String {
 
 #[get("/")]
 pub fn index() -> Template {
-    let _post_series = posts_utils::post_series();
-    let _posts = posts_utils::posts();
     Template::render("pages/index", &IndexTemplateContext {
-        title: "Home Page",
+        title: "Horace Abenga",
         name: "Horace",
-        items: vec!["One", "Two", "Three"],
+        parent: "base",
+    })
+}
+
+
+#[get("/posts")]
+pub fn posts() -> Template {
+    let _post_series = posts_utils::post_series();
+    let site_posts = posts_utils::posts();
+    Template::render("pages/posts", &PostsTemplateContext {
+        title: "Posts",
+        name: "Horace",
+        posts: site_posts,
         parent: "base",
     })
 }
@@ -37,7 +58,7 @@ pub fn index() -> Template {
 
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
-        .mount("/", routes![index])
+        .mount("/", routes![index, posts])
         .mount("/static", StaticFiles::from("static"))
         .register(catchers![not_found])
         .attach(Template::fairing())
