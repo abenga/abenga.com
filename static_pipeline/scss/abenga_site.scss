@@ -1,11 +1,29 @@
 
 body {
-  color: $gray-700;
   font-family: $font-family-serif;
+  background-color: $gray-200;
+  color: $gray-800;
+}
+
+nav {
+  font-family: $font-family-sans-serif;
 }
 
 .mono-text {
   font-family: $font-family-monospace;
+}
+
+.card {
+  background-color: $gray-100;
+}
+
+.card-text {
+  font-family: $font-family-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: darken($primary, 10%);
+  font-family: $font-family-sans-serif;
 }
 
 .profile-icons {
@@ -23,6 +41,10 @@ footer {
   small {
     font-size: 0.9rem;
   }
+}
+
+#nav-top {
+  font-family: $font-family-sans-serif;
 }
 
 #home-text {

@@ -1,0 +1,25 @@
+{{#*inline "page"}}
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col d-none d-md-block"></div>
+      <div class="col col-md-10 col-lg-6 col-xl-4">
+        {{#each posts}}
+          <h1></h1>
+          <div class="card">
+            <div class="card-body">
+              <h1 class="card-title"><a href="/post/{{this.uid}}">{{ this.title }}</a></h1>
+              {{!<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>}}
+              <div class="card-text">{{{this.abstract_html}}}</div>
+              {{!<a href="#" class="card-link">Card link</a>}}
+              {{!<a href="#" class="card-link">Another link</a>}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+      <div class="col d-none d-md-block"></div>
+    </div>
+  </div>
+
+{{/inline}}
+{{~> (parent)~}}
