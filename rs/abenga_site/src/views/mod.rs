@@ -1,11 +1,14 @@
 
 // #[macro_use] extern crate rocket;
 
+use std::str::FromStr;
+
+use rocket::response as rocket_response;
+
 use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
-
 use rocket_contrib::uuid::Uuid;
-use rocket_contrib::uuid::uuid_crate as uuid;
+use rocket_contrib::uuid::uuid_crate;
 
 use crate::lib::db::utils::posts as posts_utils;
 use crate::lib::db::models;
@@ -68,9 +71,11 @@ pub fn show_recent_posts() -> Template {
     })
 }
 
-#[get("/post/<uid>")]
-pub fn show_post(uid: Uuid) -> Template {
-    let post = posts_utils::get_post(uid);
+#[get("/post/<post_uuid_str>")]
+pub fn show_post(post_uuid_str: String) -> Template {
+    // let post_uuid = uuid_crate::Uuid::parse_str(&post_uuid_str).unwrap();
+    let post_uuid = Uuid::from_str(&post_uuid_str).unwrap();
+    let post = posts_utils::get_post(post_uuid);
     Template::render("pages/post", &PostTemplateContext {
         title: "Posts",
         name: "Horace",
@@ -80,9 +85,21 @@ pub fn show_post(uid: Uuid) -> Template {
 }
 
 
+// /2014/11/13/button-widgets/
+#[get("/post/<year_posted>/<month_posted>/<day_posted>/<joined_title>")]
+pub fn visit_old_url(year_posted: i32, month_posted: i32,
+                     day_posted: i32, joined_title: String) -> rocket_response::Redirect {
+    let post_uuid_str = posts_utils::get_uid_from_ymd_and_title(
+        year_posted, month_posted, day_posted, joined_title
+    ).unwrap();
+    // let post_uuid = uuid_crate::Uuid::parse_str(&post_uuid_str).unwrap();
+    rocket_response::Redirect::to(uri!(show_post: post_uuid_str))
+}
+
+
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
-        .mount("/", routes![index, show_recent_posts, show_post])
+        .mount("/", routes![index, show_recent_posts, show_post, visit_old_url])
         .mount("/static", StaticFiles::from("static"))
         .register(catchers![not_found])
         .attach(Template::fairing())

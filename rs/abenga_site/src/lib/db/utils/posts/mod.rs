@@ -1,6 +1,5 @@
 
 use rocket_contrib::uuid::Uuid;
-use rocket_contrib::uuid::uuid_crate as uuid;
 
 use crate::lib::db::models as db_models;
 use crate::lib::db::utils as db_utils;
@@ -103,3 +102,21 @@ pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
     }
 }
 
+
+pub fn get_uid_from_ymd_and_title(year_added: i32, month_added: i32, day_added: i32, joined_title: String) -> Option<String> {
+    let mut v = Vec::new();
+    let conn = db_utils::get_db_connection().expect("Could not connect to database!");
+    for row in &conn.query("SELECT \
+        uid FROM data.posts \
+        WHERE year_added = $1 AND month_added = $2 AND \
+              day_added = $3 AND joined_title = $4;",
+                           &[&year_added, &month_added, &day_added, &joined_title]).unwrap() {
+        v.push(row.get(0))
+    }
+    if v.len() != 1 {
+        None
+    } else {
+        let uuid_str = v.pop();
+        uuid_str
+    }
+}
