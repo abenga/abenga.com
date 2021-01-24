@@ -33,10 +33,12 @@ pub fn posts() -> Vec<db_models::Post> {
     let mut v = Vec::new();
     let conn = db_utils::get_db_connection().expect("Could not connect to database!");
     for row in &conn.query("SELECT \
-        id, uid, title, joined_title, date_added::text, last_edited::text, year_added, month_added, \
-        day_added, author_id, abstract_md, abstract_html, body_md, body_html, series_id, \
+        id, uid, title, joined_title, ltrim(to_char(date_added, 'DDth Month YYYY'), '0'), \
+        ltrim(to_char(last_edited, 'DDth Month YYYY'), '0'), year_added, month_added, \
+        day_added, author_id, abstract_md, abstract_html, body_md, body_html,  series_id, \
         position_in_series, references_md, references_html, tags \
-        FROM data.posts;", &[]).unwrap() {
+        FROM data.posts \
+        ORDER BY date_added DESC;", &[]).unwrap() {
         v.push(db_models::Post {
             id: row.get(0),
             uid: row.get(1),
@@ -68,10 +70,12 @@ pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
     let conn = db_utils::get_db_connection().expect("Could not connect to database!");
     let uid_str = format!("{}", uid);
     for row in &conn.query("SELECT \
-        id, uid, title, joined_title, date_added::text, last_edited::text, year_added, month_added, \
-        day_added, author_id, abstract_md, abstract_html, body_md, body_html, series_id, \
-        position_in_series, references_md, references_html, tags \
-        FROM data.posts WHERE uid = $1;", &[&uid_str]).unwrap() {
+        id, uid, title, joined_title, ltrim(to_char(date_added, 'DDth Month YYYY'), '0'), \
+        ltrim(to_char(last_edited, 'DDth Month YYYY'), '0'), year_added, month_added, \
+        day_added, author_id, abstract_md, abstract_html, body_md, body_html, \
+        series_id, position_in_series, references_md, references_html, tags \
+        FROM data.posts \
+        WHERE uid = $1;", &[&uid_str]).unwrap() {
         v.push(db_models::Post {
             id: row.get(0),
             uid: row.get(1),
