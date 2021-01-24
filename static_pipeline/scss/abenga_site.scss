@@ -2,7 +2,7 @@
 body {
   font-family: $font-family-serif;
   background-color: $gray-200;
-  color: $gray-800;
+  color: $gray-600;
 }
 
 nav {
@@ -17,8 +17,12 @@ nav {
   background-color: $gray-100;
 }
 
-.card-text {
-  font-family: $font-family-serif;
+//.card-text {
+//  font-family: $font-family-serif;
+//}
+
+.post-abstract {
+  font-style: italic;
 }
 
 h1, h2, h3, h4, h5, h6 {
