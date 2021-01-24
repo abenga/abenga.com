@@ -11,19 +11,18 @@ use crate::lib::db::utils::posts as posts_utils;
 use crate::lib::db::models;
 
 #[derive(serde::Serialize)]
-struct IndexTemplateContext {
-    title: &'static str,
-    name: &'static str,
-    //items: Vec<&'static str>,
+struct IndexTemplateContext<'a> {
+    title: &'a str,
+    author: &'a str,
     // This key tells handlebars which template is the parent.
-    parent: &'static str,
+    parent: &'a str,
 }
 
 
 #[derive(serde::Serialize)]
 struct PostListTemplateContext<'a> {
     title: &'a str,
-    name: &'a str,
+    author: &'a str,
     posts: Vec<models::Post>,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
@@ -33,7 +32,7 @@ struct PostListTemplateContext<'a> {
 #[derive(serde::Serialize)]
 struct PostTemplateContext<'a> {
     title: &'a str,
-    name: &'a str,
+    author: &'a str,
     post: &'a models::Post,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
@@ -50,7 +49,7 @@ fn not_found() -> String {
 pub fn index() -> Template {
     Template::render("pages/index", &IndexTemplateContext {
         title: "Horace Abenga",
-        name: "Horace",
+        author: "Horace Abenga",
         parent: "base",
     })
 }
@@ -62,7 +61,7 @@ pub fn show_recent_posts() -> Template {
     let most_recent_posts = posts_utils::posts();
     Template::render("pages/posts", &PostListTemplateContext {
         title: "Posts",
-        name: "Horace",
+        author: "Horace Abenga",
         posts: most_recent_posts,
         parent: "base",
     })
@@ -75,14 +74,13 @@ pub fn show_post(post_uuid_str: String) -> Template {
     let post = posts_utils::get_post(post_uuid).unwrap();
     Template::render("pages/post", &PostTemplateContext {
         title: &post.title,
-        name: "Horace",
+        author: "Horace Abenga",
         post: &post,
         parent: "base",
     })
 }
 
 
-// /2014/11/13/button-widgets/
 #[get("/post/<year_posted>/<month_posted>/<day_posted>/<joined_title>")]
 pub fn visit_old_url(year_posted: i32, month_posted: i32,
                      day_posted: i32, joined_title: String) -> rocket_response::Redirect {
