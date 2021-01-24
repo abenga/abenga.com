@@ -14,6 +14,7 @@ use crate::lib::db::models;
 struct IndexTemplateContext<'a> {
     title: &'a str,
     author: &'a str,
+    description: &'a str,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
 }
@@ -23,6 +24,7 @@ struct IndexTemplateContext<'a> {
 struct PostListTemplateContext<'a> {
     title: &'a str,
     author: &'a str,
+    description: &'a str,
     posts: Vec<models::Post>,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
@@ -33,6 +35,7 @@ struct PostListTemplateContext<'a> {
 struct PostTemplateContext<'a> {
     title: &'a str,
     author: &'a str,
+    description: &'a str,
     post: &'a models::Post,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
@@ -49,6 +52,7 @@ fn not_found() -> String {
 pub fn index() -> Template {
     Template::render("pages/index", &IndexTemplateContext {
         title: "Horace Abenga",
+        description: "Software engineer based in Nairobi, Kenya.",
         author: "Horace Abenga",
         parent: "base",
     })
@@ -60,7 +64,8 @@ pub fn show_recent_posts() -> Template {
     let _post_series = posts_utils::post_series();
     let most_recent_posts = posts_utils::posts();
     Template::render("pages/posts", &PostListTemplateContext {
-        title: "Posts",
+        title: "Horace Abenga | Posts",
+        description: "Blog post listing",
         author: "Horace Abenga",
         posts: most_recent_posts,
         parent: "base",
@@ -69,11 +74,11 @@ pub fn show_recent_posts() -> Template {
 
 #[get("/post/<post_uuid_str>")]
 pub fn show_post(post_uuid_str: String) -> Template {
-    // let post_uuid = uuid_crate::Uuid::parse_str(&post_uuid_str).unwrap();
     let post_uuid = Uuid::from_str(&post_uuid_str).unwrap();
     let post = posts_utils::get_post(post_uuid).unwrap();
     Template::render("pages/post", &PostTemplateContext {
         title: &post.title,
+        description: &post.title,
         author: "Horace Abenga",
         post: &post,
         parent: "base",
