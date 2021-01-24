@@ -1,8 +1,8 @@
 
 body {
   font-family: $font-family-serif;
-  background-color: $gray-200;
-  color: $gray-800;
+  background-color: $gray-300;
+  color: $gray-700;
 }
 
 nav {
@@ -14,16 +14,21 @@ nav {
 }
 
 .card {
-  background-color: $gray-100;
+  background-color: $gray-200;
 }
 
-.card-text {
-  font-family: $font-family-serif;
+//.card-text {
+//  font-family: $font-family-serif;
+//}
+
+.post-abstract {
+  font-style: italic;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: darken($primary, 10%);
   font-family: $font-family-sans-serif;
+  margin-top: 0.75em;
 }
 
 .profile-icons {
