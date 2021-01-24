@@ -1,6 +1,4 @@
 
-// #[macro_use] extern crate rocket;
-
 use std::str::FromStr;
 
 use rocket::response as rocket_response;
@@ -8,7 +6,6 @@ use rocket::response as rocket_response;
 use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
 use rocket_contrib::uuid::Uuid;
-use rocket_contrib::uuid::uuid_crate;
 
 use crate::lib::db::utils::posts as posts_utils;
 use crate::lib::db::models;
@@ -37,7 +34,7 @@ struct PostListTemplateContext<'a> {
 struct PostTemplateContext<'a> {
     title: &'a str,
     name: &'a str,
-    post: models::Post,
+    post: &'a models::Post,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
 }
@@ -75,11 +72,11 @@ pub fn show_recent_posts() -> Template {
 pub fn show_post(post_uuid_str: String) -> Template {
     // let post_uuid = uuid_crate::Uuid::parse_str(&post_uuid_str).unwrap();
     let post_uuid = Uuid::from_str(&post_uuid_str).unwrap();
-    let post = posts_utils::get_post(post_uuid);
+    let post = posts_utils::get_post(post_uuid).unwrap();
     Template::render("pages/post", &PostTemplateContext {
-        title: "Posts",
+        title: &post.title,
         name: "Horace",
-        post: post.unwrap(),
+        post: &post,
         parent: "base",
     })
 }
@@ -92,7 +89,6 @@ pub fn visit_old_url(year_posted: i32, month_posted: i32,
     let post_uuid_str = posts_utils::get_uid_from_ymd_and_title(
         year_posted, month_posted, day_posted, joined_title
     ).unwrap();
-    // let post_uuid = uuid_crate::Uuid::parse_str(&post_uuid_str).unwrap();
     rocket_response::Redirect::to(uri!(show_post: post_uuid_str))
 }
 
