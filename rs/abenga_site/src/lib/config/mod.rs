@@ -31,9 +31,7 @@ pub fn get_config() -> Config {
     } else {
         path::Path::new("/home/admin/Rust/abenga_site/configuration.toml")
     };
-    //println!("======================================================");
-    //println!("{:?}", config_file_path);
-    //println!("======================================================");
+
     let mut f = fs::File::open(&config_file_path).expect("Unable to open configuration file");
     let mut s = String::new();
     f.read_to_string(&mut s).expect("Could not read file to string");
