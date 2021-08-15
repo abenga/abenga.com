@@ -13,12 +13,12 @@ pub fn get_db_connection() -> Result<postgres::Client, postgres::Error> {
         "remote"
     };
     let connect_str = format!(
-        "host={host} user={user} password={password} port={port} database={database}",
+        "host={host} user={user} password={password} port={port} dbname={dbname}",
         user=conf.databases[db_env].user,
         password=conf.databases[db_env].password,
         host=conf.databases[db_env].host,
         port=conf.databases[db_env].port,
-        database=conf.databases[db_env].database
+        dbname=conf.databases[db_env].database
     );
     let client = postgres::Client::connect(&connect_str, postgres::NoTls)?;
 
