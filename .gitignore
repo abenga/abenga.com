@@ -1,11 +1,4 @@
-# Python files
-*.pyc
-py/env
-
-# Rust
-rs/abenga_site/config.toml
-rs/abenga_site/target
-rs/abenga_site/Cargo.lock
+__pycache__
 
 # Static build pipeline
 static_pipeline/vendor/bootstrap
