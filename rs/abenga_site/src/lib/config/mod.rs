@@ -29,7 +29,8 @@ pub fn get_config() -> Config {
     let config_file_path = if app_run_type == "DOCKER" {
         path::Path::new("/app/configuration.toml")
     } else {
-        path::Path::new("/home/admin/Rust/abenga_site/configuration.toml")
+        //path::Path::new("/home/admin/Rust/abenga_site/configuration.toml")
+        path::Path::new("/home/horace/Documents/Development/Rust/abenga_site/configuration.toml")
     };
 
     let mut f = fs::File::open(&config_file_path).expect("Unable to open configuration file");
