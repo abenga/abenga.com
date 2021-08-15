@@ -8,7 +8,7 @@ WORKDIR ./abenga_site
 RUN cargo build --release
 
 # Create Slim Distribution Image
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 ARG APP=/app
 
 RUN apt-get update \

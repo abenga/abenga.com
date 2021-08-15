@@ -96,6 +96,18 @@ pub fn visit_old_url(year_posted: i32, month_posted: i32,
 }
 
 
+// #[get("/author/login")]
+// pub fn author_login() -> Template {
+//
+// }
+//
+//
+// #[post("/author/login")]
+// pub fn author_login_process_form() -> Template {
+//
+// }
+
+
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", routes![index, show_recent_posts, show_post, visit_old_url])
@@ -103,3 +115,4 @@ pub fn rocket() -> rocket::Rocket {
         .register(catchers![not_found])
         .attach(Template::fairing())
 }
+
