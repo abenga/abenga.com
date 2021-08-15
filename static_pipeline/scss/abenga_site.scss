@@ -62,3 +62,21 @@ footer {
   font-size: 2.5rem;
   font-weight: bold;
 }
+
+pre {
+  padding: 1rem;
+  border-top: 1px solid $gray-500;
+  border-bottom: 1px solid $gray-500;
+}
+
+figure {
+  margin: 1rem;
+
+  figcaption {
+    color: $gray-600;
+    font-family: $font-family-sans-serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 0.45rem;
+  }
+}
