@@ -1,1 +1,4 @@
-Rocket.toml.sample
+Cargo.lock
+config.toml
+target
+Rocket.toml
