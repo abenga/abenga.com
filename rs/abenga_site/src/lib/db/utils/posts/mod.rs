@@ -7,8 +7,8 @@ use crate::lib::db::utils as db_utils;
 
 pub fn post_series<'a>() -> Vec<db_models::PostSeries> {
     let mut v = Vec::new();
-    let conn = db_utils::get_db_connection().expect("Could not connect to database!");
-    for row in &conn.query("SELECT id, uid, author_id, title, joined_title, \
+    let mut client = db_utils::get_db_connection().expect("Could not connect to database!");
+    for row in client.query("SELECT id, uid, author_id, title, joined_title, \
     abstract_md, abstract_html, date_added::text, last_edited::text, tags \
     FROM data.post_series;", &[]).unwrap() {
         let _post_series = db_models::PostSeries {
@@ -31,8 +31,8 @@ pub fn post_series<'a>() -> Vec<db_models::PostSeries> {
 
 pub fn posts() -> Vec<db_models::Post> {
     let mut v = Vec::new();
-    let conn = db_utils::get_db_connection().expect("Could not connect to database!");
-    for row in &conn.query("SELECT \
+    let mut client = db_utils::get_db_connection().expect("Could not connect to database!");
+    for row in client.query("SELECT \
         id, uid, title, joined_title, ltrim(to_char(date_added, 'DDth Month YYYY'), '0'), \
         ltrim(to_char(last_edited, 'DDth Month YYYY'), '0'), year_added, month_added, \
         day_added, author_id, abstract_md, abstract_html, body_md, body_html,  series_id, \
@@ -67,9 +67,9 @@ pub fn posts() -> Vec<db_models::Post> {
 
 pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
     let mut v = Vec::new();
-    let conn = db_utils::get_db_connection().expect("Could not connect to database!");
+    let mut client = db_utils::get_db_connection().expect("Could not connect to database!");
     let uid_str = format!("{}", uid);
-    for row in &conn.query("SELECT \
+    for row in client.query("SELECT \
         id, uid, title, joined_title, ltrim(to_char(date_added, 'DD Month YYYY'), '0'), \
         ltrim(to_char(last_edited, 'DD Month YYYY'), '0'), year_added, month_added, \
         day_added, author_id, abstract_md, abstract_html, body_md, body_html, \
@@ -109,8 +109,8 @@ pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
 
 pub fn get_uid_from_ymd_and_title(year_added: i32, month_added: i32, day_added: i32, joined_title: String) -> Option<String> {
     let mut v = Vec::new();
-    let conn = db_utils::get_db_connection().expect("Could not connect to database!");
-    for row in &conn.query("SELECT \
+    let mut client = db_utils::get_db_connection().expect("Could not connect to database!");
+    for row in client.query("SELECT \
         uid FROM data.posts \
         WHERE year_added = $1 AND month_added = $2 AND \
               day_added = $3 AND joined_title = $4;",
