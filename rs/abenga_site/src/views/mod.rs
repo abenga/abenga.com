@@ -115,4 +115,3 @@ pub fn rocket() -> rocket::Rocket {
         .register(catchers![not_found])
         .attach(Template::fairing())
 }
-
