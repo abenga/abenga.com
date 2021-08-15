@@ -26,8 +26,11 @@ pub struct Config {
 
 pub fn get_config() -> Config {
     let app_run_type = env::var("SITE_RUN_TYPE").expect("Site run type not set!");
+    let db_env = env::var("DATABASE_ENV_NAME").expect("Database environment not set!");
     let config_file_path = if app_run_type == "DOCKER" {
         path::Path::new("/app/configuration.toml")
+    } else if db_env == "remote" {
+        path::Path::new("/home/admin/Rust/abenga_site/configuration.toml")
     } else {
         path::Path::new("/home/horace/Documents/Development/Rust/abenga_site/configuration.toml")
     };
