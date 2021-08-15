@@ -1,5 +1,4 @@
 
-
 #[derive(Clone, Debug, serde::Serialize)]
 pub struct Person {
     id: i32,

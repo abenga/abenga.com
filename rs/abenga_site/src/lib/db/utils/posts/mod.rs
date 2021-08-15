@@ -70,8 +70,8 @@ pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
     let conn = db_utils::get_db_connection().expect("Could not connect to database!");
     let uid_str = format!("{}", uid);
     for row in &conn.query("SELECT \
-        id, uid, title, joined_title, ltrim(to_char(date_added, 'DDth Month YYYY'), '0'), \
-        ltrim(to_char(last_edited, 'DDth Month YYYY'), '0'), year_added, month_added, \
+        id, uid, title, joined_title, ltrim(to_char(date_added, 'DD Month YYYY'), '0'), \
+        ltrim(to_char(last_edited, 'DD Month YYYY'), '0'), year_added, month_added, \
         day_added, author_id, abstract_md, abstract_html, body_md, body_html, \
         series_id, position_in_series, references_md, references_html, tags \
         FROM data.posts \

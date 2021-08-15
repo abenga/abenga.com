@@ -5,10 +5,10 @@ ADD rs/abenga_site ./abenga_site
 ADD configuration.toml ./configuration.toml
 WORKDIR ./abenga_site
 
-RUN cargo build
+RUN cargo build --release
 
 # Create Slim Distribution Image
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 ARG APP=/app
 
 RUN apt-get update \
@@ -24,7 +24,7 @@ RUN groupadd $APP_USER \
     && useradd -g $APP_USER $APP_USER \
     && mkdir -p ${APP}
 
-COPY --from=builder /abenga_site/target/debug/abenga_site ${APP}/abenga_site
+COPY --from=builder /abenga_site/target/release/abenga_site ${APP}/abenga_site
 COPY --from=builder /configuration.toml ${APP}/configuration.toml
 COPY --from=builder /abenga_site/static ${APP}/static
 COPY --from=builder /abenga_site/templates ${APP}/templates
