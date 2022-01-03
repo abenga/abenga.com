@@ -15,13 +15,13 @@ from sqlalchemy import (
 
     ForeignKey,
 )
-
 from sqlalchemy import exc as sqlalchemy_exc
 from sqlalchemy.dialects.postgresql import (
     JSONB,
     UUID,
     ARRAY,
 )
+from sqlalchemy.orm import relationship
 
 from sqlalchemy.sql.expression import false, null
 from sqlalchemy.orm import relationship
@@ -79,3 +79,5 @@ class Post(Base):
     references_html = Column(String, nullable=False, name='references_html', quote=False)
     cover_image_path = Column(String, name='cover_image_path', quote=False)
     tags = Column(ARRAY(String), name='tags', quote=False)
+
+    post_series = relationship(PostSeries)

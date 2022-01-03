@@ -1,0 +1,46 @@
+<p>The general steps to using a widget in GTK are:</p>
+<ul>
+<li>
+<p>We use the constructor <code>Gtk.Widget()</code> to create a new <code>Gtk.Widget()</code>.</p>
+</li>
+<li>
+<p>Connect all signals and events we wish to use to the appropriate handlers.</p>
+</li>
+<li>
+<p>Set the attributes of the widget.</p>
+</li>
+<li>
+<p>Pack the widget into a container using the appropriate call such as
+  <code>Gtk.Container.add()</code> or <code>Gtk.Box.pack_start()</code>.</p>
+</li>
+<li>
+<p><code>Gtk.Widget.show()</code> the widget.</p>
+</li>
+</ul>
+<p><code>show()</code> lets GTK know that we are done setting the attributes of the widget,
+and it is ready to be displayed. You may also use <code>Gtk.Widget.hide()</code> to make it
+disappear again. The order in which you show the widgets is not important, but I
+suggest showing the window last so the whole window pops up at once rather than
+seeing the individual widgets come up on the screen as they're formed. The
+children of a widget (a window is a widget too) will not be displayed until the
+window itself is shown using the <code>show()</code> method.</p>
+<h2>Widget Hierarchy</h2>
+<p>For reference, a comprehensive hierarchy tree used to implement widgets may be 
+found in the GTK online documetation at 
+<a href="https://developer.gnome.org/gtk3/stable/ch02.html">https://developer.gnome.org/gtk3/stable/ch02.html</a>.</p>
+<p>This documentation lists the C API objects, but it is straightforward to infer 
+the Vala API class names, especially with the help of the Valadoc documentation 
+at <a href="http://valadoc.org/#!api=gtk+-3.0/Gtk">http://valadoc.org/#!api=gtk+-3.0/Gtk</a>.</p>
+<h2>References and Further Reading</h2>
+<ul>
+<li>
+<p>The GTK 3 Reference Manual : Object Hierarchy. [Online] Available from:
+  <a href="https://developer.gnome.org/gtk3/stable/ch02.html">https://developer.gnome.org/gtk3/stable/ch02.html</a>
+  [Accessed 10&nbsp;November&nbsp;2014]</p>
+</li>
+<li>
+<p>Vala Documentation: Gtk. [Online] Available from:
+  <a href="http://valadoc.org/#!api=gtk+-3.0/Gtk">http://valadoc.org/#!api=gtk+-3.0/Gtk</a>
+  [Accessed 16&nbsp;September&nbsp;2014]</p>
+</li>
+</ul>
