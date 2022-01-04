@@ -59,18 +59,10 @@ pub struct Post {
 
     pub author_id: i32,
 
-    pub abstract_md: String,
-    pub abstract_html: String,
-
-    pub body_md: String,
-    pub body_html: String,
+    pub tags: Vec<String>,
 
     pub series_id: Option<i32>,
     pub position_in_series: Option<i32>,
-
-
-    pub references_md: Option<String>,
-    pub references_html: Option<String>,
-
-    pub tags: Vec<String>,
+    pub series_uid: Option<String>,
+    pub series_title: Option<String>,
 }
