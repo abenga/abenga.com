@@ -44,47 +44,49 @@ tooltips. To add an icon, use <code>Gtk.Entry.set_icon_from_stock()</code> or on
 various other functions that set an icon from an icon name, or a pixbuf. To set 
 a tooltip on an icon, use <code>Gtk.Entry.set_icon_tooltip_text()</code>.</p>
 <p>The following example demonstrates some of these concepts in action:</p>
-<p>```vala
-public class Application : Gtk.Window {
+<pre><code>public class Application : Gtk.Window {
   public Application () {
     // Prepare Gtk.Window:
     this.title = "Text Entry";
     this.window_position = Gtk.WindowPosition.CENTER;
     this.destroy.connect (Gtk.main_quit);
     this.set_default_size (350, 70);
-    this.set_border_width(10);</p>
-<pre><code>// The Entry:
-Gtk.Entry entry = new Gtk.Entry ();
-this.add (entry);
+    this.set_border_width(10);
 
-// Add a default-text:
-entry.set_text ("Hello, world!");
+    // The Entry:
+    Gtk.Entry entry = new Gtk.Entry ();
+    this.add (entry);
 
-// Add a delete-button:
-entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear");
-entry.icon_press.connect ((pos, event) =&gt; {
-  if (pos == Gtk.EntryIconPosition.SECONDARY) {
-    entry.set_text ("");
+    // Add a default-text:
+    entry.set_text ("Hello, world!");
+
+    // Add a delete-button:
+    entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear");
+    entry.icon_press.connect ((pos, event) => {
+      if (pos == Gtk.EntryIconPosition.SECONDARY) {
+        entry.set_text ("");
+      }
+    });
+
+    // Print text to stdout on enter:
+    entry.activate.connect (() => {
+      unowned string str = entry.get_text ();
+      stdout.printf ("%s\n", str);
+    });
   }
-});
 
-// Print text to stdout on enter:
-entry.activate.connect (() =&gt; {
-  unowned string str = entry.get_text ();
-  stdout.printf ("%s\n", str);
-});
+  public static int main (string[] args) {
+    Gtk.init (ref args);
+
+    Application app = new Application ();
+    app.show_all ();
+    Gtk.main ();
+    return 0;
+  }
+}</code></pre>
+
+<pre><code>
 </code></pre>
-<p>}</p>
-<p>public static int main (string[] args) {
-    Gtk.init (ref args);</p>
-<pre><code>Application app = new Application ();
-app.show_all ();
-Gtk.main ();
-return 0;
-</code></pre>
-<p>}
-}
-```    </p>
 <p>The code creates a window with a single text entry, as in the image below:</p>
 <figure>
   <img src="https://lh3.googleusercontent.com/7k8_GhR0RdwlTONdK8FruIp0f6K91tTr8Px30eQxpHg=w477-h220-no" alt="Text Entry" title="Text Entry">
@@ -107,8 +109,7 @@ step and page increments, and a page size. The <code>Gtk.Adjustment</code> objec
 update the value itself. Instead it is left up to the owner of the <code>Adjustment</code> 
 to control the value.</p>
 <p>The constructor for a <code>Gtk.Adjustment</code> is</p>
-<p><code>vala
-Gtk.Adjustment (double value,           // The initial value of the adjustment
+<pre><code>Gtk.Adjustment (double value,           // The initial value of the adjustment
                 double lower,           // The minimum value of the adjustment
                 double upper,           // The maximum value of the adjustment
                 double step_increment,  // The step increment
@@ -116,7 +117,8 @@ Gtk.Adjustment (double value,           // The initial value of the adjustment
                 double page_size        // The page size. Irrelevant, and should be set to 0
                                         // if the adjustment is used for a simple scalar
                                         // value, e.g. in a SpinButton.
-                );</code></p>
+                );</code></pre>
+
 <p>The owner of the <code>Gtk.Adjustment</code> typically calls the <code>value_changed</code> function 
 after changing the value of the adjustment, causing the <code>value_changed</code> signal 
 to be emitted. The owner may also call the <code>changed</code> function after changing one
@@ -124,37 +126,37 @@ or more of the <code>Adjustment</code>'s properties other than the value. This r
 the emission of the <code>changed</code> signal.</p>
 <p>The following example creates a <code>Gtk.SpinButton</code>, along with the associated
 <code>Gtk.Adjustment</code>, and outputs the values as they are changed to stdout.</p>
-<p>```vala
-public class Application : Gtk.Window {
+<pre><code>public class Application : Gtk.Window {
   public Application () {
     // Prepare Gtk.Window:
     this.title = "Text Entry";
     this.window_position = Gtk.WindowPosition.CENTER;
     this.destroy.connect (Gtk.main_quit);
     this.set_default_size (350, 70);
-    this.set_border_width(10);</p>
-<pre><code>// Create the Adjustment and SpinButton.
-Gtk.Adjustment adj = new Gtk.Adjustment(0, 0, 16, 1, 1, 1);
-Gtk.SpinButton button = new Gtk.SpinButton(adj, 1, 0);
-button.set_range(0, 16);
-this.add(button);
+    this.set_border_width(10);
 
-button.value_changed.connect (() =&gt; {
-  int val = button.get_value_as_int ();
-  stdout.printf ("%d\n", val);
-});
-</code></pre>
-<p>}</p>
-<p>public static int main (string[] args) {
-    Gtk.init(ref args);</p>
-<pre><code>Application app = new Application();
-app.show_all();
-Gtk.main();
-return 0;
-</code></pre>
-<p>}
-}
-```</p>
+    // Create the Adjustment and SpinButton.
+    Gtk.Adjustment adj = new Gtk.Adjustment(0, 0, 16, 1, 1, 1);
+    Gtk.SpinButton button = new Gtk.SpinButton(adj, 1, 0);
+    button.set_range(0, 16);
+    this.add(button);
+
+    button.value_changed.connect (() => {
+      int val = button.get_value_as_int ();
+      stdout.printf ("%d\n", val);
+    });
+  }
+
+  public static int main (string[] args) {
+    Gtk.init(ref args);
+
+    Application app = new Application();
+    app.show_all();
+    Gtk.main();
+    return 0;
+  }
+}</code></pre>
+
 <p>It should yield a window similar to the following:</p>
 <figure>
   <img src="https://lh4.googleusercontent.com/-fO5WqeBhR-Y/VGzJhhVMidI/AAAAAAAAALg/2Eu-WANCR9s/w453-h190-no/02SpinButton.png" alt="Spin Button" title="Spin Button">
@@ -163,16 +165,16 @@ return 0;
 
 <p>It is not necessary to manually create the associated <code>Adjustment</code>. for the 
 spin button. The alternative constructor</p>
-<p><code>vala
-SpinButton.with_range (double min, double max, double step);</code></p>
+<pre><code>SpinButton.with_range (double min, double max, double step);</code></pre>
+
 <p>allows creation of a numeric <code>Gtk.SpinButton</code> without manually creating an 
 adjustment. The value is initially set to the <code>minimum</code> value and a page 
 increment of <code>10 * step</code> is the default.</p>
 <p>In the example above, we'd replace the lines creating the adjustment and button
 with the lines</p>
-<p><code>vala
-Gtk.SpinButton button = new Gtk.SpinButton.with_range(0, 16, 1);
-this.add(button);</code></p>
+<pre><code>Gtk.SpinButton button = new Gtk.SpinButton.with_range(0, 16, 1);
+this.add(button);</code></pre>
+
 <p>to the same effect.</p>
 <h2>Sources and Further Reading</h2>
 <ul>

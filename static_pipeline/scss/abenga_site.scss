@@ -85,3 +85,11 @@ figure {
     padding: 0.45rem;
   }
 }
+
+.blockquote {
+  font-size: $font-size-base * 0.8;
+  font-style: italic;
+  margin: 1em;
+  padding: 0.25em 0.25em 0.25em 1.5em;
+  border-left: 4px solid $gray-400;
+}

@@ -14,4 +14,5 @@ js:	vendor/bootstrap/dist/js/bootstrap.min.js js/src/vendor/*
 	cp js/src/vendor/jquery/jquery-3.5.1.min.js $(STATIC_PATH)js/lib/vendor/
 	cp js/src/vendor/underscore/underscore-min.js $(STATIC_PATH)js/lib/vendor/
 	cp js/src/vendor/backbone/backbone.js $(STATIC_PATH)js/lib/vendor/
+	cp js/src/vendor/highlight/highlight.min.js $(STATIC_PATH)js/lib/vendor/
 	cp js/src/vendor/d3/d3.min.js $(STATIC_PATH)js/lib/vendor/

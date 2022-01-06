@@ -105,7 +105,7 @@ to bring modern programming language features to GNOME developers without
 imposing any additional runtime requirements and without using a different
 ABI compared to applications and libraries written in C.</p>
 <p>According to the <a href="https://wiki.gnome.org/Vala/Tutorial">Vala tutorial</a>:</p>
-<blockquote>
+<div class="blockquote">
 <p>Vala is a new programming language that allows modern programming techniques 
 to be used to write applications that run on the GNOME runtime libraries, 
 particularly GLib and GObject. This platform has long provided a very complete 
@@ -115,25 +115,25 @@ platform were with the machine native C API, which exposes a lot of often
 unwanted detail, with a high level language that has an attendant virtual 
 machine, such as Python or the Mono C# language, or alternatively, with C++ 
 through a wrapper library.</p>
+
 <p>Vala is different from all these other techniques, as it outputs C code which 
 can be compiled to run with no extra library support beyond the GNOME platform. 
 This has several consequences, but most importantly:</p>
+
 <ul>
-<li>
-<p>Programs written in Vala should have broadly similar performance to those 
-  written directly in C, whilst being easier and faster to write and maintain.</p>
-</li>
-<li>
-<p>A Vala application can do nothing that a C equivalent cannot. Whilst Vala 
+<li>Programs written in Vala should have broadly similar performance to those 
+  written directly in C, whilst being easier and faster to write and maintain.</li>
+<li>A Vala application can do nothing that a C equivalent cannot. Whilst Vala 
   introduces a lot of language features that are not available in C, these are 
   all mapped to C constructs, although they are often ones that are difficult 
-  or too time consuming to write directly.</p>
-</li>
+  or too time consuming to write directly.</li>
 </ul>
+
 <p>As such, whilst Vala is a modern language with all of the features you would 
 expect, it gains its power from an existing platform, and must in some ways 
 comply with the rules set down by it.</p>
-</blockquote>
+</div>
+
 <h2>References</h2>
 <ul>
 <li>
