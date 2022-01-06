@@ -15,10 +15,10 @@
 
 <body class="d-flex flex-column h-100">
 <main role="main" class="flex-shrink-0">
-{% include "nav.html" %}
-{% block content %}{% endblock %}
+{% include "nav" %}
+{% block contents %}{% endblock %}
 </main>
-{% include "footer.tera" %}
+{% include "footer" %}
 </body>
 <script src="/static/js/lib/vendor/jquery.min.js"><\/script>
 <script src="/static/js/lib/vendor/bootstrap.min.js"></script>

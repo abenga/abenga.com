@@ -189,31 +189,46 @@ def add_local_db_data(people, authors, post_series, posts):
                 with open(abstract_md_file_path, 'wt') as mdf:
                     mdf.write(_post.abstract_md)
 
-            html = markdown.markdown(_post.abstract_md)
-            output_path = os.path.join(output_post_dir, 'abstract.tera')
-            with open(output_path, 'wt') as f:
-                f.write(html)
-
             body_md_file_path = os.path.join(post_dir, 'body.md')
             if not os.path.isfile(body_md_file_path):
                 with open(body_md_file_path, 'wt') as mdf:
                     mdf.write(_post.body_md)
 
-            html = markdown.markdown(_post.body_md)
-            output_path = os.path.join(output_post_dir, 'body.tera')
-            with open(output_path, 'wt') as f:
-                f.write(html)
+            # if _post.references_md:
+            references_md_file_path = os.path.join(post_dir, 'references.md')
+            if not os.path.isfile(references_md_file_path):
+                with open(references_md_file_path, 'wt') as mdf:
+                    mdf.write(_post.references_md)
 
-            if _post.references_md:
-                references_md_file_path = os.path.join(post_dir, 'references.md')
-                if not os.path.isfile(references_md_file_path):
-                    with open(references_md_file_path, 'wt') as mdf:
-                        mdf.write(_post.references_md)
+            # references_html = markdown.markdown(_post.references_md)
+            # output_path = os.path.join(output_post_dir, 'references.tera')
+            # f.write(references_html)
 
-                html = markdown.markdown(_post.references_md)
-                output_path = os.path.join(output_post_dir, 'references.tera')
+            with open(abstract_md_file_path, 'rt') as abstract_f, open(body_md_file_path, 'rt') as body_f, \
+                    open(references_md_file_path, 'rt') as references_f:
+                abstract_md = abstract_f.read()
+                body_md = body_f.read()
+                references_md = references_f.read()
+
+                abstract_html = markdown.markdown(abstract_md)
+                body_html = markdown.markdown(body_md)
+                references_html = markdown.markdown(references_md)
+
+                output_path = os.path.join(output_post_dir, 'body.tera')
                 with open(output_path, 'wt') as f:
-                    f.write(html)
+                    f.write('{% extends "pages/post" %}\n\n')
+
+                    f.write('{% block abstract %}\n')
+                    f.write(abstract_html)
+                    f.write('\n{% endblock %}\n\n')
+
+                    f.write('{% block post_text %}\n')
+                    f.write(body_html)
+                    f.write('\n{% endblock %}\n\n')
+
+                    f.write('{% block references %}\n')
+                    f.write(references_html)
+                    f.write('{% endblock %}\n')
 
 
 def main(args):

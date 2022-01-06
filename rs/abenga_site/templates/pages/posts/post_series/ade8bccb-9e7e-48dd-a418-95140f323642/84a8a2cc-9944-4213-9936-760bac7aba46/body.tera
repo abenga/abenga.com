@@ -1,3 +1,16 @@
+{% extends "pages/post" %}
+
+{% block abstract %}
+<p><a href="http://www.gtk.org">GTK+</a> (acronym for the <em>GIMP Toolkit</em>) is a
+library for creating graphical user interfaces. It works on many
+UNIX-like platforms, Windows, and OS X.</p>
+<p><a href="https://live.gnome.org/Vala/">Vala</a> is a new programming language that aims
+to bring modern programming language features to GNOME developers without
+imposing any additional runtime requirements and without using a different
+ABI compared to applications and libraries written in C.</p>
+{% endblock %}
+
+{% block post_text %}
 <h2>About GTK</h2>
 <p><a href="http://www.gtk.org">GTK+</a> (acronym for the <em>GIMP Toolkit</em>) is a
 library for creating graphical user interfaces. It works on many
@@ -133,3 +146,7 @@ comply with the rules set down by it.</p>
   <a href="https://wiki.gnome.org/Projects/Vala/Tutorial">https://wiki.gnome.org/Projects/Vala/Tutorial</a> [Accessed: 16 September 2014] </p>
 </li>
 </ul>
+{% endblock %}
+
+{% block references %}
+{% endblock %}

@@ -1,3 +1,4 @@
+{% extends "base" %}
 {% block contents %}
   <div class="container-fluid">
     <div class="row">
