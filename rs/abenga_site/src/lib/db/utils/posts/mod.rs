@@ -32,13 +32,16 @@ pub fn post_series<'a>() -> Vec<db_models::PostSeries> {
 pub fn posts() -> Vec<db_models::Post> {
     let mut v = Vec::new();
     let mut client = db_utils::get_db_connection().expect("Could not connect to database!");
-    for row in client.query("SELECT \
-        p.id, p.uid, p.title, p.joined_title, ltrim(to_char(p.date_added, 'DDth Month YYYY'), '0'), \
-        ltrim(to_char(p.last_edited, 'DDth Month YYYY'), '0'), p.year_added, p.month_added, p.day_added, \
-        p.author_id, p.tags, COALESCE(p.series_id, -1), ps.uid, p.position_in_series, ps.title \
-        FROM data.posts p \
-        LEFT JOIN data.post_series ps ON p.series_id = ps.id \
-        ORDER BY date_added DESC;", &[]).unwrap() {
+    let q = "SELECT \
+    p.id, p.uid, p.title, p.joined_title, ltrim(to_char(p.date_added, 'DDth Month YYYY'), '0'), \
+    ltrim(to_char(p.last_edited, 'DDth Month YYYY'), '0'), p.year_added, p.month_added, \
+    p.day_added, p.author_id, p.tags, COALESCE(p.series_id, -1), COALESCE(ps.uid, ''), \
+    COALESCE(p.position_in_series, -1), COALESCE(ps.title, 'default') \
+    FROM data.posts p \
+    LEFT JOIN data.post_series ps ON p.series_id = ps.id \
+    ORDER BY p.date_added DESC;";
+    std_logger::request!("{}", q);
+    for row in client.query(q, &[]).unwrap() {
         v.push(db_models::Post {
             id: row.get(0),
             uid: row.get(1),
@@ -65,13 +68,17 @@ pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
     let mut v = Vec::new();
     let mut client = db_utils::get_db_connection().expect("Could not connect to database!");
     let uid_str = format!("{}", uid);
-    for row in client.query("SELECT \
-        p.id, p.uid, p.title, p.joined_title, ltrim(to_char(p.date_added, 'DD Month YYYY'), '0'), \
-        ltrim(to_char(p.last_edited, 'DD Month YYYY'), '0'), p.year_added, p.month_added, \
-        p.day_added, p.author_id, p.tags, COALESCE(p.series_id, -1), ps.uid, p.position_in_series, ps.title \
-        FROM data.posts p \
-        LEFT JOIN data.post_series ps ON p.series_id = ps.id \
-        WHERE uid = $1;", &[&uid_str]).unwrap() {
+    let q = "SELECT \
+    p.id, p.uid, p.title, p.joined_title, ltrim(to_char(p.date_added, 'DDth Month YYYY'), '0'), \
+    ltrim(to_char(p.last_edited, 'DDth Month YYYY'), '0'), p.year_added, p.month_added, \
+    p.day_added, p.author_id, p.tags, COALESCE(p.series_id, -1), COALESCE(ps.uid, ''), \
+    COALESCE(p.position_in_series, -1), COALESCE(ps.title, 'default') \
+    FROM data.posts p \
+    LEFT JOIN data.post_series ps ON p.series_id = ps.id \
+    WHERE p.uid = $1;";
+    std_logger::request!("{}", q);
+
+    for row in client.query(q, &[&uid_str]).unwrap() {
         v.push(db_models::Post {
             id: row.get(0),
             uid: row.get(1),
@@ -90,12 +97,13 @@ pub fn get_post(uid: Uuid) -> Option<db_models::Post> {
             series_title: row.get(14),
         });
     }
-    if v.len() != 1 {
+
+    return if v.len() != 1 {
         None
     } else {
         let post = v.pop();
         post
-    }
+    };
 }
 
 

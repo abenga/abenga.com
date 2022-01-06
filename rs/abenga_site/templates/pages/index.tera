@@ -1,4 +1,6 @@
-{{#*inline "page"}}
+{% extends "base" %}
+
+{%  block contents %}
 <div class="container-fluid">
   <div class="row">
     <div class="col d-none d-md-block"></div>
@@ -23,5 +25,4 @@
     <div class="col d-none d-md-block"></div>
   </div>
 </div>
-{{/inline}}
-{{~> (parent)~}}
+{% endblock %}

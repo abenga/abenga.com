@@ -1,5 +1,6 @@
-{{#*inline "page"}}
+{% extends "base" %}
 
+{% block contents %}
   <div class="container-fluid">
     <div class="row">
       <div class="col d-none d-md-block"></div>
@@ -11,22 +12,19 @@
               <div class="col d-none d-md-block"></div>
               <div class="col col-md-10 col-lg-8 col-xl-6">
                 <hr>
-                <div class="post-abstract card-text">{{{post.abstract_html}}}</div>
+                <div class="post-abstract card-text">{#post.abstract_html#}</div>
                 <hr>
                 <div class="text-right text-muted"><small><em>Added on {{post.date_added}}</em></small></div>
               </div>
               <div class="col d-none d-md-block"></div>
             </div>
 
-            <div class="card-text">{{{post.body_html}}}</div>
-            {{!<a href="#" class="card-link">Card link</a>}}
-            {{!<a href="#" class="card-link">Another link</a>}}
+            <div class="card-text">{% include "{{ body_template }}" %}</div>
+
           </div>
         </div>
       </div>
       <div class="col d-none d-md-block"></div>
     </div>
   </div>
-
-{{/inline}}
-{{~> (parent)~}}
+{% endblock %}

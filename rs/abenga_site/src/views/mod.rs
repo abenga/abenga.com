@@ -39,7 +39,7 @@ struct PostTemplateContext<'a> {
     post: &'a models::Post,
     // This key tells handlebars which template is the parent.
     parent: &'a str,
-    post_text: &'a str,
+    body_template: &'a str,
 }
 
 
@@ -77,21 +77,22 @@ pub fn show_recent_posts() -> Template {
 pub fn show_post(post_uuid_str: String) -> Template {
     let post_uuid = Uuid::from_str(&post_uuid_str).unwrap();
     let post = posts_utils::get_post(post_uuid).unwrap();
-    let post_series_uuid = "default";
-    if post.series_id.unwrap() > 0 {
-        "get_uid"
-    } else {
-        "default"
-    };
+    let series_uid = Uuid::from_str(&post.series_uid).unwrap();
 
-    let post_text_template = format!("posts/post_series/{}/{}", post_series_uuid, post_uuid_str);
+    let post_text_template = format!("posts/post_series/{}/{}/body", series_uid, post_uuid_str);
+
+    std_logger::request!("{}", post_text_template);
+    // println!("+++++++++++++++++++++++++++++++++++")
+    // println!(post_text_template)
+    // println!("+++++++++++++++++++++++++++++++++++")
+
     Template::render("pages/post", &PostTemplateContext {
         title: &post.title,
         description: &post.title,
         author: "Horace Abenga",
         post: &post,
         parent: "base",
-        post_text: &post_text_template[..],
+        body_template: &post_text_template[..],
     })
 }
 

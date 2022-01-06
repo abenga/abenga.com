@@ -61,8 +61,8 @@ pub struct Post {
 
     pub tags: Vec<String>,
 
-    pub series_id: Option<i32>,
-    pub position_in_series: Option<i32>,
-    pub series_uid: Option<String>,
-    pub series_title: Option<String>,
+    pub series_id: i32,
+    pub position_in_series: i32,
+    pub series_uid: String,
+    pub series_title: String,
 }

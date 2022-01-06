@@ -76,7 +76,9 @@ def add_local_db_data(people, authors, post_series, posts):
     config = configuration.get_config()
     data_config_key = "local" if os.uname()[1] == "horace-monster" else "remote"
     data_dir = config["directories"][data_config_key]["data_dir"]
-    posts_output_dir = os.path.join(config["directories"][data_config_key]["base_dir"], 'rs', 'abenga_site', 'templates', 'posts')
+    posts_output_dir = os.path.join(
+        config["directories"][data_config_key]["base_dir"], 'rs', 'abenga_site', 'templates', 'pages', 'posts'
+    )
     with db_utils.get_database_connection("local") as local_conn:
         for person in people:
             local_conn.session.add(
@@ -126,7 +128,7 @@ def add_local_db_data(people, authors, post_series, posts):
             os.makedirs(output_post_series_dir, exist_ok=True)
 
             html = markdown.markdown(single_post_series.abstract_md)
-            output_path = os.path.join(output_post_series_dir, 'abstract.html')
+            output_path = os.path.join(output_post_series_dir, 'abstract.tera')
             with open(output_path, 'wt') as f:
                 f.write(html)
 
@@ -188,7 +190,7 @@ def add_local_db_data(people, authors, post_series, posts):
                     mdf.write(_post.abstract_md)
 
             html = markdown.markdown(_post.abstract_md)
-            output_path = os.path.join(output_post_dir, 'abstract.html')
+            output_path = os.path.join(output_post_dir, 'abstract.tera')
             with open(output_path, 'wt') as f:
                 f.write(html)
 
@@ -198,7 +200,7 @@ def add_local_db_data(people, authors, post_series, posts):
                     mdf.write(_post.body_md)
 
             html = markdown.markdown(_post.body_md)
-            output_path = os.path.join(output_post_dir, 'body.html')
+            output_path = os.path.join(output_post_dir, 'body.tera')
             with open(output_path, 'wt') as f:
                 f.write(html)
 
@@ -209,7 +211,7 @@ def add_local_db_data(people, authors, post_series, posts):
                         mdf.write(_post.references_md)
 
                 html = markdown.markdown(_post.references_md)
-                output_path = os.path.join(output_post_dir, 'references.html')
+                output_path = os.path.join(output_post_dir, 'references.tera')
                 with open(output_path, 'wt') as f:
                     f.write(html)
 
