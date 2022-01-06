@@ -17,10 +17,6 @@ nav {
   background-color: $gray-100;
 }
 
-//.card-text {
-//  font-family: $font-family-serif;
-//}
-
 .post-abstract {
   font-style: italic;
 }
@@ -29,7 +25,8 @@ h1, h2, h3, h4, h5, h6 {
   color: lighten($primary, 10%);
   font-family: $font-family-sans-serif;
   margin-top: 0.75em;
-  font-weight: 600;
+  margin-bottom: 0.25em;
+  font-weight: 700;
 }
 
 .profile-icons {
@@ -64,9 +61,15 @@ footer {
 }
 
 pre {
-  padding: 1rem;
-  border-top: 1px solid $gray-500;
-  border-bottom: 1px solid $gray-500;
+  padding: 0.5em;
+  margin: 0.5em;
+  border: 1px solid $gray-400;
+  background: white;
+
+  code {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 figure {
@@ -79,4 +82,12 @@ figure {
     font-style: italic;
     padding: 0.45rem;
   }
+}
+
+.blockquote {
+  font-size: $font-size-base * 0.8;
+  font-style: italic;
+  margin: 1em;
+  padding: 0.25em 0.25em 0.25em 1.5em;
+  border-left: 4px solid $gray-400;
 }

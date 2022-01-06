@@ -5,17 +5,19 @@ $font-size-base: 1.1rem;
 $font-weight-base: 400;
 $font-weight-bold: 700;
 $font-family-sans-serif: "Open Sans", "Helvetica Neue", Arial, sans-serif;
-$font-family-serif: Georgia, serif;
+$font-family-serif: "Merriweather", Georgia, serif;
 $font-family-monospace: "Ubuntu Mono", monospace;
 
 $link-hover-decoration: none;
 
-$h1-font-size: $font-size-base * 2;
-$h2-font-size: $font-size-base * 1.85;
-$h3-font-size: $font-size-base * 1.70;
-$h4-font-size: $font-size-base * 1.55;
-$h5-font-size: $font-size-base * 1.40;
-$h6-font-size: $font-size-base * 1.25;
+$primary: #228;
+
+$h1-font-size: $font-size-base * 2.2;
+$h2-font-size: $font-size-base * 2.035;
+$h3-font-size: $font-size-base * 1.87;
+$h4-font-size: $font-size-base * 1.705;
+$h5-font-size: $font-size-base * 1.54;
+$h6-font-size: $font-size-base * 1.375;
 
 $grid-breakpoints: (
   xs: 0,

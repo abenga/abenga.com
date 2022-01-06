@@ -1,5 +1,7 @@
 __pycache__
 
+data/
+
 # Static build pipeline
 static_pipeline/vendor/bootstrap
 

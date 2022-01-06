@@ -17,3 +17,13 @@ database = "user"
 user = "user"
 password = "*****"
 echo = false
+
+[directories]
+
+[directories.local]
+base_dir = "/home/horace/Documents/Development/Rust/abenga_site/"
+data_dir = "/home/horace/Documents/Development/Rust/abenga_site/data/"
+
+[directories.remote]
+base_dir = "/home/admin/Rust/abenga_site/"
+data_dir = "/home/admin/Rust/abenga_site/data/"
