@@ -26,8 +26,7 @@ struct PostListTemplateContext<'a> {
     author: &'a str,
     description: &'a str,
     posts: Vec<models::Post>,
-    // This key tells handlebars which template is the parent.
-    parent: &'a str,
+    post_series: Vec<models::PostSeries>,
 }
 
 
@@ -62,14 +61,15 @@ pub fn index() -> Template {
 
 #[get("/posts")]
 pub fn show_recent_posts() -> Template {
-    let _post_series = posts_utils::post_series();
+    let post_series = posts_utils::post_series();
     let most_recent_posts = posts_utils::posts();
+    // let post_series = post_u
     Template::render("pages/posts", &PostListTemplateContext {
         title: "Horace Abenga | Posts",
-        description: "Blog post listing",
+        description: "Post listing",
         author: "Horace Abenga",
         posts: most_recent_posts,
-        parent: "base",
+        post_series: post_series,
     })
 }
 
