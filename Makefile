@@ -1,5 +1,3 @@
 # Javascript
 
 # RS Web App
-
-
