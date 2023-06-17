@@ -1,11 +1,8 @@
 mod templating;
 mod routes;
 
-use askama::Template;
+
 use axum::{
-    extract,
-    http::StatusCode,
-    response::{Html, IntoResponse, Response},
     routing::get,
     Router,
 };
