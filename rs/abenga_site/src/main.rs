@@ -1,12 +1,13 @@
 mod templating;
 mod routes;
 
+use std::net::SocketAddr;
 
 use axum::{
     routing::get,
     Router,
 };
-use std::net::SocketAddr;
+use tower_http::services::ServeDir;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 
@@ -23,6 +24,8 @@ async fn main() {
     // build our application with some routes
     let app = Router::new().route(
         "/", get(routes::pages::base::home_page)
+    ).nest_service(
+        "/assets", ServeDir::new("assets")
     );
 
     // run it
