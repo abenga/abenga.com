@@ -1,23 +1,15 @@
 [package]
-name = "abenga_site"
-version = "0.0.0-alpha"
-authors = ["Horace <horace@abenga.com>"]
-edition = "2018"
+name = "abenga_site_axum"
+version = "0.1.0"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4"
-hostname = "0.3"
-std-logger = "0.4"
-rocket = "0.5.0-rc.2"
+askama = "0.12"
+axum = "0.6"
 postgres = "0.19"
-serde = {"version" = "1.0", features = ["derive"]}
-serde_json = "1.0"
-toml = "0.5.7"
-uuid = "0.8.1"
-
-[dependencies.rocket_contrib]
-version = "0.4"
-default-features = true
-features = ["json", "serve", "handlebars_templates", "tera_templates", "uuid"]
+serde = { "version" = "1.0", features = ["derive"] }
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
