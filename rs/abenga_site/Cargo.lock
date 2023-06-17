@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "abenga_site_axum"
+name = "abenga_site"
 version = "0.1.0"
 dependencies = [
  "askama",
