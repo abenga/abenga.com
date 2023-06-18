@@ -3,6 +3,7 @@ use axum::{
     Router,
 };
 
-pub fn route(path: &str, method_router: MethodRouter<()>) -> Router {
+
+pub fn build_router(path: &str, method_router: MethodRouter<()>) -> Router {
     Router::new().route(path, method_router)
 }

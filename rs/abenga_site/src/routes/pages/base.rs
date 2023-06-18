@@ -5,7 +5,7 @@ use axum::{
     routing::get
 };
 
-use crate::routes::utils::route;
+use crate::routing::build_router;
 
 
 #[derive(Template)]
@@ -27,5 +27,5 @@ pub fn base_pages() -> Router {
         crate::templating::HtmlTemplate(template)
     }
 
-    route("/", get(home))
+    build_router("/", get(home))
 }

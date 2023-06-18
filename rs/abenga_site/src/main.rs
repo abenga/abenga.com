@@ -1,5 +1,6 @@
 mod routes;
 mod templating;
+mod routing;
 
 use std::net::SocketAddr;
 
