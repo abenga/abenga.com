@@ -2,6 +2,7 @@ mod routes;
 mod templating;
 mod routing;
 
+use std::env;
 use std::net::SocketAddr;
 
 use axum::{
@@ -12,7 +13,6 @@ use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() {
-    // TODO: Read log level from config.
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::DEBUG)
         .init();
@@ -21,8 +21,11 @@ async fn main() {
         .merge(routes::pages::base::base_pages())
         .nest_service("/assets", ServeDir::new("assets"));
 
-    // TODO: Read address and port from config.
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8300));
+    // TODO: Config management can be fancier.
+    let port: u16 = env::var("SITE_PORT")
+        .expect("ERR: port not found in env")
+        .parse().expect("Invalid port number received!");
+    let addr = SocketAddr::from(([127, 0, 0, 1], port));
     tracing::debug!("listening on {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
