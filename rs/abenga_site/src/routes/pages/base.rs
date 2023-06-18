@@ -1,7 +1,11 @@
 use askama::Template;
 use axum::{
     response::IntoResponse,
+    Router,
+    routing::get
 };
+
+use crate::routes::utils::route;
 
 
 #[derive(Template)]
@@ -13,12 +17,16 @@ pub struct HomeTemplate {
 }
 
 
-pub async fn home_page() -> impl IntoResponse {
-    let template = HomeTemplate {
-        author: "Horace Abenga".to_string(),
-        description: "Software engineer from Nairobi, Kenya.".to_string(),
-        title: "Home page".to_string(),
+pub fn base_pages() -> Router {
+    async fn home() -> impl IntoResponse {
+        let template = HomeTemplate {
+            author: "Horace Abenga".to_string(),
+            description: "Software engineer from Nairobi, Kenya.".to_string(),
+            title: "Home page".to_string(),
 
-    };
-    crate::templating::HtmlTemplate(template)
+        };
+        crate::templating::HtmlTemplate(template)
+    }
+
+    route("/", get(home))
 }
