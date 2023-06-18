@@ -23,7 +23,6 @@ pub fn base_pages() -> Router {
             author: "Horace Abenga".to_string(),
             description: "Software engineer from Nairobi, Kenya.".to_string(),
             title: "Home page".to_string(),
-
         };
         crate::templating::HtmlTemplate(template)
     }
