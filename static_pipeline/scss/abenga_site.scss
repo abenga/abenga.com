@@ -5,6 +5,10 @@ body {
   color: $gray-700;
 }
 
+main {
+  padding-top: $navbar-brand-height;
+}
+
 nav {
   font-family: $font-family-sans-serif;
 }

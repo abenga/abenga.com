@@ -15,7 +15,7 @@ RUN apt-get update \
     && apt-get install -y ca-certificates tzdata \
     && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8000
+EXPOSE 8300
 
 ENV TZ=Etc/UTC \
     APP_USER=appuser
@@ -26,7 +26,7 @@ RUN groupadd $APP_USER \
 
 COPY --from=builder /abenga_site/target/release/abenga_site ${APP}/abenga_site
 COPY --from=builder /configuration.toml ${APP}/configuration.toml
-COPY --from=builder /abenga_site/static ${APP}/static
+COPY --from=builder /abenga_site/assets ${APP}/assets
 COPY --from=builder /abenga_site/templates ${APP}/templates
 
 RUN chown -R $APP_USER:$APP_USER ${APP}
