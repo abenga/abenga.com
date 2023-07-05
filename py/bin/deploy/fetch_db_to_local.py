@@ -1,9 +1,8 @@
 import argparse
 import logging
 import os
+import pathlib
 import uuid
-
-import markdown
 
 from abenga_site.py.lib.models import base as base_db_config
 from abenga_site.py.lib.models import core as core_models
@@ -12,30 +11,89 @@ from abenga_site.py.lib.utils import configuration
 from abenga_site.py.lib.utils import database as db_utils
 
 
-def add_uuids_to_remote():
-    # NOTE: This was a one-time operation to add UUID columns in posts and post series
-    with db_utils.get_database_connection("dummy") as remote_conn:
-        query = "ALTER TABLE data.post_series ADD COLUMN IF NOT EXISTS uid VARCHAR DEFAULT NULL UNIQUE;"
-        remote_conn.execute(query)
-        remote_conn.session.commit()
+SERIES_PAGE = """{{% extends "base.html" %}}
 
-        post_series = remote_conn.session.query(data_models.PostSeries).all()
-        for single_post_series in post_series:
-            uid = uuid.uuid4()
-            update_query = f"UPDATE data.post_series SET uid = '{uid}' WHERE id = {single_post_series.id};"
-            remote_conn.execute(update_query)
-            remote_conn.session.commit()
+{{% block contents %}}
+<div class="row">
+    <div class="col-md-2 d-md-block d-sm-none"></div>
+    <div class="col-md-8">
+        <h1>{title}</h1>
+        {abstract}
+        <hr>
+        {posts}
+    </div>
+    <div class="col-md-2 d-md-block d-sm-none"></div>
+</div>
+{{% endblock %}}
+"""
 
-        query = "ALTER TABLE data.posts ADD COLUMN IF NOT EXISTS uid VARCHAR DEFAULT NULL UNIQUE;"
-        remote_conn.execute(query)
-        remote_conn.session.commit()
+POST_SERIES_ENTRY = """<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{post_title}</h5>
+        {post_abstract}
+        <a href="/post/{post_uid}" class="btn btn-sm">view</a>
+    </div>
+</div>
+"""
 
-        posts = remote_conn.session.query(data_models.Post).all()
+POST_PAGE = """{{% extends "base.html" %}}
+{{% block contents %}}
+<div class="row">
+<div class="col-md-1 d-md-block d-sm-none"></div>
+<div class="col-md-10">
+
+<h1>{post_title}</h1>
+
+<p class="text-muted text-right"><em>{date_published}</em></p>
+
+<blockquote>{post_abstract}</blockquote>
+
+{post_body}
+
+<hr>
+
+{post_references}
+
+</div>
+<div class="col-md-1 d-md-block d-sm-none"></div>
+</div>
+{{% endblock %}}
+"""
+
+
+def write_post_series_page(series_page_path, series_title, abstract_html, posts):
+    with open(series_page_path, "wt") as f:
+        posts_list_html = ""
         for post in posts:
-            uid = uuid.uuid4()
-            update_query = f"UPDATE data.posts SET uid = '{uid}' WHERE id = {post.id};"
-            remote_conn.execute(update_query)
-            remote_conn.session.commit()
+            posts_list_html += POST_SERIES_ENTRY.format(
+                post_title=post.title,
+                post_abstract=post.abstract_html,
+                post_uid=post.uid,
+            )
+
+        f.write(
+            SERIES_PAGE.format(
+                title=series_title, abstract=abstract_html, posts=posts_list_html
+            )
+        )
+
+
+def write_post_page(post, post_page_path, post_md_dir):
+    with open(post_page_path, "wt") as f:
+        f.write(
+            POST_PAGE.format(
+                post_title=post.title,
+                date_published=post.date_added.strftime("%-d %B %Y"),
+                post_abstract=post.abstract_html,
+                post_body=post.body_html,
+                post_references=post.references_html,
+            )
+        )
+
+    md_attributes = ["abstract", "body", "references"]
+    for md_attribute in md_attributes:
+        with open(post_md_dir / f"{md_attribute}.md", "wt") as f:
+            f.write(getattr(post, f"{md_attribute}_md"))
 
 
 def fetch_remote_data():
@@ -68,186 +126,48 @@ def create_local_db(delete):
         conn.session.commit()
 
 
-def add_local_db_data(people, authors, post_series, posts):
+def save_remote_posts_to_local_file_system(people, authors, all_post_series, posts):
     config = configuration.get_config()
     data_config_key = "local" if os.uname()[1] == "horace-monster" else "remote"
-    data_dir = config["directories"][data_config_key]["data_dir"]
-    posts_output_dir = os.path.join(
-        config["directories"][data_config_key]["base_dir"],
-        "rs",
-        "abenga_site",
-        "templates",
-        "pages",
-        "posts",
+    base_dir = pathlib.Path(config["directories"][data_config_key]["base_dir"])
+    writing_output_dir = (
+        base_dir / "rs" / "abenga_site" / "templates" / "pages" / "writing"
     )
-    with db_utils.get_database_connection("local") as local_conn:
-        for person in people:
-            local_conn.session.add(
-                core_models.Person(
-                    **{
-                        "id": person.id,
-                        "uid": person.uid,
-                        "username": person.username,
-                        "email": person.email,
-                        "primary_phone_number": person.primary_phone_number,
-                        "login_type": person.login_type,
-                        "password": person.password,
-                        "oauth_provider": person.oauth_provider,
-                        "oauth_token": person.oauth_token,
-                        "first_name": person.first_name,
-                        "last_name": person.last_name,
-                        "other_names": person.other_names,
-                        "date_added": person.date_added,
-                        "contact_email": person.contact_email,
-                        "other_phone_numbers": person.other_phone_numbers,
-                        "postal_address": person.postal_address,
-                        "physical_address": person.physical_address,
-                        "active": person.active,
-                    }
-                )
-            )
-            local_conn.session.commit()
 
-        for author in authors:
-            local_conn.session.add(
-                data_models.Author(
-                    **{
-                        "id": author.id,
-                        "bio_md": author.bio_md,
-                        "bio_html": author.bio_html,
-                    }
-                )
-            )
-            local_conn.session.commit()
+    post_series_uid = None
+    for post_series in all_post_series:
+        post_series_uid = str(post_series.uid)
 
-        for single_post_series in post_series:
-            post_series_dir = os.path.join(
-                data_dir, "post_series", str(single_post_series.uid)
-            )
-            os.makedirs(post_series_dir, exist_ok=True)
-            abstract_md_file_path = os.path.join(post_series_dir, "abstract.md")
-            # abstract_html_file_path = os.path.join(post_series_dir, 'abstract.html')
-            if not os.path.isfile(abstract_md_file_path):
-                with open(abstract_md_file_path, "wt") as mdf:
-                    mdf.write(single_post_series.abstract_md)
+        post_series_dir = writing_output_dir / "post_series" / post_series_uid
+        post_series_dir.mkdir(parents=True, exist_ok=True)
 
-            output_post_series_dir = os.path.join(
-                posts_output_dir, "post_series", str(single_post_series.uid)
-            )
-            os.makedirs(output_post_series_dir, exist_ok=True)
+        abstract_md_file_path = post_series_dir / "md" / "abstract.md"
+        (post_series_dir / "md").mkdir(parents=True, exist_ok=True)
+        with open(abstract_md_file_path, "wt") as f:
+            f.write(post_series.abstract_md)
 
-            html = markdown.markdown(single_post_series.abstract_md)
-            output_path = os.path.join(output_post_series_dir, "abstract.tera")
-            with open(output_path, "wt") as f:
-                f.write(html)
+        series_html_file_path = os.path.join(post_series_dir, "series_page.html")
+        write_post_series_page(
+            series_html_file_path, post_series.title, post_series.abstract_html, posts
+        )
 
-            ps = data_models.PostSeries(
-                **{
-                    "id": single_post_series.id,
-                    "uid": single_post_series.uid,
-                    "author_id": single_post_series.author_id,
-                    "title": single_post_series.title,
-                    "joined_title": single_post_series.joined_title,
-                    "date_added": single_post_series.date_added,
-                    "last_edited": single_post_series.last_edited,
-                    "abstract_md": single_post_series.abstract_md,
-                    "abstract_html": single_post_series.abstract_html,
-                    "cover_image_path": single_post_series.cover_image_path,
-                    "tags": single_post_series.tags,
-                }
-            )
-            local_conn.session.add(ps)
-            local_conn.session.commit()
+        for i, post in enumerate(posts):
+            post_dir = writing_output_dir / "posts" / str(post.uid)
+            post_dir.mkdir(exist_ok=True, parents=True)
 
-        for post in posts:
-            _post = data_models.Post(
-                **{
-                    "id": post.id,
-                    "uid": post.uid,
-                    "title": post.title,
-                    "joined_title": post.joined_title,
-                    "date_added": post.date_added,
-                    "last_edited": post.last_edited,
-                    "year_added": post.year_added,
-                    "month_added": post.month_added,
-                    "day_added": post.day_added,
-                    "author_id": post.author_id,
-                    "abstract_md": post.abstract_md,
-                    "abstract_html": post.abstract_html,
-                    "body_md": post.body_md,
-                    "body_html": post.body_html,
-                    "series_id": post.series_id,
-                    "position_in_series": post.position_in_series,
-                    "references_md": post.references_md,
-                    "references_html": post.references_html,
-                    "cover_image_path": post.cover_image_path,
-                    "tags": post.tags,
-                }
-            )
-            local_conn.session.add(_post)
-            local_conn.session.commit()
-            print(f'Post: "{_post.title}"')
+            post_md_dir = post_dir / "md"
+            post_md_dir.mkdir(exist_ok=True, parents=True)
 
-            series_uid = str(_post.post_series.uid) if _post.series_id else "default"
-            post_uid = str(_post.uid)
-
-            post_dir = os.path.join(data_dir, "post_series", series_uid, post_uid)
-            os.makedirs(post_dir, exist_ok=True)
-
-            output_post_dir = os.path.join(
-                posts_output_dir, "post_series", series_uid, post_uid
-            )
-            os.makedirs(output_post_dir, exist_ok=True)
-
-            abstract_md_file_path = os.path.join(post_dir, "abstract.md")
-            if not os.path.isfile(abstract_md_file_path):
-                with open(abstract_md_file_path, "wt") as mdf:
-                    mdf.write(_post.abstract_md)
-
-            body_md_file_path = os.path.join(post_dir, "body.md")
-            if not os.path.isfile(body_md_file_path):
-                with open(body_md_file_path, "wt") as mdf:
-                    mdf.write(_post.body_md)
-
-            # if _post.references_md:
-            references_md_file_path = os.path.join(post_dir, "references.md")
-            if not os.path.isfile(references_md_file_path):
-                with open(references_md_file_path, "wt") as mdf:
-                    mdf.write(_post.references_md)
-
-            with open(abstract_md_file_path, "rt") as abstract_f, open(
-                body_md_file_path, "rt"
-            ) as body_f, open(references_md_file_path, "rt") as references_f:
-                abstract_md = abstract_f.read()
-                body_md = body_f.read()
-                references_md = references_f.read()
-
-                abstract_html = markdown.markdown(abstract_md)
-                body_html = markdown.markdown(body_md)
-                references_html = markdown.markdown(references_md)
-
-                output_path = os.path.join(output_post_dir, "body.tera")
-                with open(output_path, "wt") as f:
-                    f.write('{% extends "pages/post" %}\n\n')
-
-                    f.write("{% block abstract %}\n")
-                    f.write(abstract_html)
-                    f.write("\n{% endblock %}\n\n")
-
-                    f.write("{% block post_text %}\n")
-                    f.write(body_html)
-                    f.write("\n{% endblock %}\n\n")
-
-                    f.write("{% block references %}\n")
-                    f.write(references_html)
-                    f.write("{% endblock %}\n")
+            post_page_path = post_dir / "post_page.html"
+            write_post_page(post, post_page_path, post_md_dir)
 
 
 def main(args):
     people, authors, post_series, posts = fetch_remote_data()
-    if args.create_local:
-        create_local_db(args.delete)
-        add_local_db_data(people, authors, post_series, posts)
+    print(people)
+    save_remote_posts_to_local_file_system(people, authors, post_series, posts)
+    # if args.create_local:
+    #     create_local_db(args.delete)
 
 
 if __name__ == "__main__":
