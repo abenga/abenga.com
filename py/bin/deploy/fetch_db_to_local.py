@@ -134,7 +134,6 @@ def save_remote_posts_to_local_file_system(people, authors, all_post_series, pos
         base_dir / "rs" / "abenga_site" / "templates" / "pages" / "writing"
     )
 
-    post_series_uid = None
     for post_series in all_post_series:
         post_series_uid = str(post_series.uid)
 
