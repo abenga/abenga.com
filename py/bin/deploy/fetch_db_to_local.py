@@ -80,22 +80,15 @@ def write_post_series_page(series_page_path, series_title, abstract_html, posts)
         )
 
 
-def write_post_page(post, post_page_path, post_md_dir):
-    with open(post_page_path, "wt") as f:
-        f.write(
-            POST_PAGE.format(
-                post_title=post.title,
-                date_published=post.date_added.strftime("%-d %B %Y"),
-                post_abstract=post.abstract_html,
-                post_body=post.body_html,
-                post_references=post.references_html,
-            )
-        )
+def write_post_pages(post, post_page_dir):
+    text_attributes = ["abstract", "body", "references"]
+    for text_attribute in text_attributes:
+        with open(post_page_dir / "md" / f"{text_attribute}.md", "wt") as f:
+            f.write(getattr(post, f"{text_attribute}_md"))
 
-    md_attributes = ["abstract", "body", "references"]
-    for md_attribute in md_attributes:
-        with open(post_md_dir / f"{md_attribute}.md", "wt") as f:
-            f.write(getattr(post, f"{md_attribute}_md"))
+        with open(post_page_dir / f"{text_attribute}.html", "wt") as f:
+            if getattr(post, f"{text_attribute}_html"):
+                f.write(getattr(post, f"{text_attribute}_html"))
 
 
 def fetch_remote_data():
@@ -135,10 +128,14 @@ def save_remote_posts_to_local_file_system(people, authors, all_post_series, pos
         with open(abstract_md_file_path, "wt") as f:
             f.write(post_series.abstract_md)
 
-        series_html_file_path = os.path.join(post_series_dir, "series_page.html")
-        write_post_series_page(
-            series_html_file_path, post_series.title, post_series.abstract_html, posts
-        )
+        abstract_html = post_series_dir / "abstract.html"
+        with open(abstract_html, "wt") as f:
+            f.write(post_series.abstract_html)
+
+        # series_html_file_path = os.path.join(post_series_dir, "series_page.html")
+        # write_post_series_page(
+        #     series_html_file_path, post_series.title, post_series.abstract_html, posts
+        # )
 
         for i, post in enumerate(posts):
             post_dir = writing_output_dir / "posts" / str(post.uid)
@@ -147,8 +144,7 @@ def save_remote_posts_to_local_file_system(people, authors, all_post_series, pos
             post_md_dir = post_dir / "md"
             post_md_dir.mkdir(exist_ok=True, parents=True)
 
-            post_page_path = post_dir / "post_page.html"
-            write_post_page(post, post_page_path, post_md_dir)
+            write_post_pages(post, post_dir)
 
 
 def main(args):
