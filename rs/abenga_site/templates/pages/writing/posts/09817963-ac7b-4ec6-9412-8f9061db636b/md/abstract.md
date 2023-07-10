@@ -1,0 +1,1 @@
+Layout widgets help us to lay out several widgets in a window. They enable us to control the size of these widgets, and how they are positioned in the window. We look at two examples of packing widgets: Boxes and Grids.

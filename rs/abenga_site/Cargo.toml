@@ -8,6 +8,9 @@ edition = "2021"
 [dependencies]
 askama = "0.12"
 axum = "0.6"
+chrono = "0.4"
+diesel = { version = "2.1.0", features = ["chrono", "postgres"] }
+dotenvy = "0.15"
 postgres = "0.19"
 serde = { "version" = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["full"] }

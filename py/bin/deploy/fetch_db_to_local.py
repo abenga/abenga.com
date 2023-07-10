@@ -4,6 +4,8 @@ import os
 import pathlib
 import uuid
 
+from sqlalchemy.orm import Session
+
 from abenga_site.py.lib.models import base as base_db_config
 from abenga_site.py.lib.models import core as core_models
 from abenga_site.py.lib.models import data as data_models
@@ -78,52 +80,33 @@ def write_post_series_page(series_page_path, series_title, abstract_html, posts)
         )
 
 
-def write_post_page(post, post_page_path, post_md_dir):
-    with open(post_page_path, "wt") as f:
-        f.write(
-            POST_PAGE.format(
-                post_title=post.title,
-                date_published=post.date_added.strftime("%-d %B %Y"),
-                post_abstract=post.abstract_html,
-                post_body=post.body_html,
-                post_references=post.references_html,
-            )
-        )
+def write_post_pages(post, post_page_dir):
+    text_attributes = ["abstract", "body", "references"]
+    for text_attribute in text_attributes:
+        with open(post_page_dir / "md" / f"{text_attribute}.md", "wt") as f:
+            f.write(getattr(post, f"{text_attribute}_md"))
 
-    md_attributes = ["abstract", "body", "references"]
-    for md_attribute in md_attributes:
-        with open(post_md_dir / f"{md_attribute}.md", "wt") as f:
-            f.write(getattr(post, f"{md_attribute}_md"))
+        with open(post_page_dir / f"{text_attribute}.html", "wt") as f:
+            if getattr(post, f"{text_attribute}_html"):
+                f.write(getattr(post, f"{text_attribute}_html"))
 
 
 def fetch_remote_data():
-    with db_utils.get_database_connection("remote") as remote_conn:
+    engine = db_utils.get_database_engine("remote")
+    with Session(engine) as session:
         logging.debug("Fetching people")
-        people = remote_conn.session.query(core_models.Person).all()
+        people = session.query(core_models.Person).all()
 
         logging.debug("Fetching authors")
-        authors = remote_conn.session.query(data_models.Author).all()
+        authors = session.query(data_models.Author).all()
 
         logging.debug("Fetching post series")
-        post_series = remote_conn.session.query(data_models.PostSeries).all()
+        post_series = session.query(data_models.PostSeries).all()
 
         logging.debug("Fetching posts")
-        posts = remote_conn.session.query(data_models.Post).all()
+        posts = session.query(data_models.Post).all()
 
         return people, authors, post_series, posts
-
-
-def create_local_db(delete):
-    with db_utils.get_database_connection("local") as conn:
-        for schema in base_db_config.schemas:
-            if delete:
-                conn.execute("DROP SCHEMA IF EXISTS {} CASCADE;".format(schema))
-            conn.execute("CREATE SCHEMA IF NOT EXISTS {};".format(schema))
-
-        conn.session.commit()
-
-        base_db_config.Base.metadata.create_all(conn.engine)
-        conn.session.commit()
 
 
 def save_remote_posts_to_local_file_system(people, authors, all_post_series, posts):
@@ -134,7 +117,6 @@ def save_remote_posts_to_local_file_system(people, authors, all_post_series, pos
         base_dir / "rs" / "abenga_site" / "templates" / "pages" / "writing"
     )
 
-    post_series_uid = None
     for post_series in all_post_series:
         post_series_uid = str(post_series.uid)
 
@@ -146,10 +128,14 @@ def save_remote_posts_to_local_file_system(people, authors, all_post_series, pos
         with open(abstract_md_file_path, "wt") as f:
             f.write(post_series.abstract_md)
 
-        series_html_file_path = os.path.join(post_series_dir, "series_page.html")
-        write_post_series_page(
-            series_html_file_path, post_series.title, post_series.abstract_html, posts
-        )
+        abstract_html = post_series_dir / "abstract.html"
+        with open(abstract_html, "wt") as f:
+            f.write(post_series.abstract_html)
+
+        # series_html_file_path = os.path.join(post_series_dir, "series_page.html")
+        # write_post_series_page(
+        #     series_html_file_path, post_series.title, post_series.abstract_html, posts
+        # )
 
         for i, post in enumerate(posts):
             post_dir = writing_output_dir / "posts" / str(post.uid)
@@ -158,16 +144,12 @@ def save_remote_posts_to_local_file_system(people, authors, all_post_series, pos
             post_md_dir = post_dir / "md"
             post_md_dir.mkdir(exist_ok=True, parents=True)
 
-            post_page_path = post_dir / "post_page.html"
-            write_post_page(post, post_page_path, post_md_dir)
+            write_post_pages(post, post_dir)
 
 
 def main(args):
     people, authors, post_series, posts = fetch_remote_data()
-    print(people)
     save_remote_posts_to_local_file_system(people, authors, post_series, posts)
-    # if args.create_local:
-    #     create_local_db(args.delete)
 
 
 if __name__ == "__main__":

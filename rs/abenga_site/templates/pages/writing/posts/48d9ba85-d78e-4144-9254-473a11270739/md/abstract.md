@@ -1,0 +1,1 @@
+Here, we shall look at the various types of data types supported by Vala, and extend *Hello World* a bit more.

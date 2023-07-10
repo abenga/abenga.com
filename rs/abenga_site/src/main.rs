@@ -1,6 +1,7 @@
 mod routes;
 mod templating;
 mod routing;
+mod db;
 
 use std::env;
 use std::net::SocketAddr;
